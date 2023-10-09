@@ -74,24 +74,23 @@ def bleeding_wound(cut_state):
     """
 
     cut_state += 1
-    if cut_state >= 5:
+    if cut_state <= 5:
         print("You are slowly bleeding out, "
               "find some bandages quickly.")
+        print(f"You are hurt, reach the med bay: {cut_state}/6")
     elif cut_state == 6:
-        print("You reached critical state.")
+        print(f"You reached critical state {cut_state}/6. "
+              "You didn't reach med bay.")
         print("You died.")
         quit()
     return cut_state
-
-
-cut_state = bleeding_wound(cut_state)
 
 
 def choose_path(fall_choice):
     """
     Sets up the game progress depending on users choices.
     """
-    global path_choice
+    global cut_state
     while True:
         path_choice = input("Which path would you like to \
 take? [a/b] \n> ").lower()
@@ -104,10 +103,10 @@ take? [a/b] \n> ").lower()
             cut_state = bleeding_wound(cut_state)
             # Updates the cut_state
         elif path_choice == "a" and fall_choice == "c":
-            print("You head right towards the infirmary.")
+            print("You head right towards the med bay.")
             print("Eager to continue exploring.")
         elif path_choice == "b" and fall_choice == "c":
-            print("You head right towards the infirmary.")
+            print("You head right towards the med bay.")
             print("Where hopefully you will find "
                   "the bandages needed to stop the bleeding.\n")
             cut_state = bleeding_wound(cut_state)
@@ -125,8 +124,8 @@ def main():
         print("You managed to grab onto the pod door")
         print("You regained your balance and start exploring the room./n")
         print("You see two paths, you can either go straight "
-              "towards the ship deck, or to the right towards the infirmary.")
-        choose_path("a")
+              "towards the ship deck, or to the right towards the med bay.")
+        choose_path(fall_choice)
     elif fall_choice == "b":
         print("You accidentally grabbed the electrical cord "
               "and got electrocuted.")
@@ -139,8 +138,8 @@ def main():
         print("You start exploring the room.\n")
         print("You see two paths, you can either go "
               "straight towards the deck[a] "
-              "or to the right towards the infirmary.[b]")
-        choose_path("c")
+              "or to the right towards the med bay.[b]")
+        choose_path(fall_choice)
     else:
         print("You fell and back into the hibernation pod "
               "and lost consciousness.")
