@@ -107,19 +107,19 @@ def navigation_failure(navigation_threat):
     """
     navigation_threat += 1
     if navigation_threat <= 3:
-        print("Navigation failure! Approaching a critical "
+        print("\nNavigation failure! Approaching a critical "
               f"level. Level: {navigation_threat}/10")
         print("Manual reboot necessary.\n")
     elif navigation_threat <= 6:
-        print("Navigation failure! Critical condition "
+        print("\nNavigation failure! Critical condition "
               f"nearing severity. Level: {navigation_threat}/10")
         print("Manual reboot necessary.\n")
     elif navigation_threat <= 9:
-        print("Navigation failure! Critical state "
+        print("\nNavigation failure! Critical state "
               f"is imminent. Level: {navigation_threat}/10")
         print("Manual reboot necessary.\n")
     else:
-        print("Navigation failure! Critical state "
+        print("\nNavigation failure! Critical state "
               f"reached. Level: {navigation_threat}/10\n"
               "The ship has entered an asteroid field.\n")
         print("/////////////////////\n")
@@ -127,7 +127,7 @@ def navigation_failure(navigation_threat):
         print("3")
         print("2")
         print("1")
-        print("BANG\nBLAST\nBLOW\nBOOM")
+        print("\nBANG\nBLAST\nBLOW\nBOOM")
         print("\nThe spaceship perished.")
         print("You died.")
         print("The End.")
@@ -137,29 +137,38 @@ def navigation_failure(navigation_threat):
 
 def control_room_choose_path():
     """
-    Handles further progress. User is located in the control
-    room and needs to choose which way they would like to
-    continue going.
+    Handles the player's actions and choices which
+    way they would like to go from the Control Room.
+    User is located in the Control Room and needs
+    to choose which way they would like to continue going.
     """
     global cut_state, navigation_threat
+    print("You find yourself at the cross section. Your options are: \n"
+          "Go left into the Cargo Hold [a] or "
+          "go right into the Engineering Bay [b]?")
     while True:
         control_path_choice = input("Which path would you like to "
                                     "take? [a/b] \n> ").lower()
-        if control_path_choice == "a" and fall_choice == "a":
+        if control_path_choice == "a":
             print("You head left towards the Cargo Hold.")
-        elif control_path_choice == "a" and fall_choice == "c":
-            print("You head straight towards the Control Room.\n")
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
-        elif control_path_choice == "a" and fall_choice == "c":
-            print("You head right towards the Med Bay.")
-            print("Eager to continue exploring.")
-        elif control_path_choice == "b" and fall_choice == "c":
-            print("You head right towards the Med Bay.")
-            print("Where hopefully you will find "
-                  "the bandages needed to stop the bleeding.\n")
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
+            if cut_state > 0:
+                cut_state = bleeding_wound(cut_state)
+                # Updates the cut_state
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+                # Updates the navigation_threat
+        elif control_path_choice == "b":
+            print("You head right towards the Engineering Bay.")
+            print("Wondering what might you find there.")
+            if cut_state > 0:
+                cut_state = bleeding_wound(cut_state)
+                # Updates the cut_state
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+                # Updates the navigation_threat
+        else:
+            print("Invalid input, please choose either [a/b]")
+            quit()
 
 
 def control_room():
@@ -181,14 +190,13 @@ def control_room():
     control_room_options = input("Do you [explore/continue]? \n> ").lower()
 
     if control_room_options == "explore":
-        print("You look at all of the screens. You reach one "
+        print("\nYou look at all of the screens. You reach one "
               "that is blinking with multiple error messages.")
         print("You start reading the messages, but one catches "
               "your eye.\n")
-        print("Imminent threat!!! Navigation failure! Manual "
-              "reboot necessary to recalibrate system.\n")
-        print("You continue reading and find out you need to "
-              "find the airlock, leave the spaceship and "
+        print(("Imminent threat!!! Navigation failure! Manual "
+              "reboot necessary to recalibrate system.\n").upper())
+        print("...you must find the airlock, leave the spaceship and "
               "manually reboot the system from the outside.")
         navigation_threat = navigation_failure(navigation_threat)
         # Updates the navigation_threat
@@ -197,6 +205,7 @@ def control_room():
               "continue on your way to explore the ship.")
     else:
         print("Incorrect input, please choose [explore/continue]")
+    control_room_choose_path()
 
 
 def choose_path(fall_choice):
@@ -228,6 +237,7 @@ def choose_path(fall_choice):
             # Updates the cut_state
         else:
             print("Invalid input. Please choose [a/b]")
+            quit()
 
 
 def main():
@@ -237,7 +247,7 @@ def main():
     if fall_choice == "a":
         print("You managed to grab onto the pod door")
         print("You regained your balance and start exploring. You are "
-              "in the room containing hibernation pods./n")
+              "in the room containing hibernation pods.\n")
         print("You see two paths, you can either go straight "
               "towards the ship Control Room, or to the right "
               "towards the Med Bay.")
