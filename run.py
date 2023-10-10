@@ -1,7 +1,5 @@
 import os
 
-print("SPACESHIP ADVENTURE \n")
-
 
 def clear():
     """
@@ -10,6 +8,15 @@ def clear():
     https://www.youtube.com/watch?v=lI6S2-icPHE&t=57s
     """
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def end_game():
+    """
+    Ends the game at the user's request.
+    """
+    print("\nThank you for playing, ending the game at the user's request.")
+    print("Game Ended!\n")
+    quit()
 
 
 def start_game_message():
@@ -30,6 +37,40 @@ def start_game_message():
     print("Are you ready to open and leave your hibernation pod? [y/n]")
 
 
+def fall_choice():
+    while True:
+        fall_decision = input("What do you do? [a/b/c] \n> ")
+
+        if fall_decision == "end":
+            end_game()
+
+        if fall_decision == "a":
+            print("You managed to grab onto the pod door")
+            print("You regained your balance and start exploring. You are "
+                  "in the room containing hibernation pods.\n")
+            print("You see two paths, you can either go straight "
+                  "towards the ship Control Room, or to the right "
+                  "towards the Med Bay.")
+            choose_path(fall_decision)
+        elif fall_decision == "b":
+            print("You accidentally grabbed the electrical cord "
+                  "and got electrocuted.")
+            print("You died.")
+            print("The End.")
+            quit()
+        elif fall_decision == "c":
+            print("You fell and cut your hand; you are bleeding.")
+            print("You should find some bandages to cover the wound.\n")
+            print("You start exploring the room.\n")
+            print("You see two paths, you can either go "
+                  "straight towards the Control Room[a] "
+                  "or to the right towards the Med Bay.[b]")
+            bleeding = True
+            choose_path(fall_decision)
+        else:
+            print("\nInvalid input. Try again.")
+
+
 def open_hibernation_pod():
     """
     Waits for users response.
@@ -38,6 +79,8 @@ def open_hibernation_pod():
     """
     while True:
         pod_choice = input("> ").lower()
+        if pod_choice == "end":
+            end_game()
         if pod_choice == "yes" or pod_choice == "y":
             print("\nWith a little bit of struggle, the pod creaks open.")
             print("You step out but your legs falter, you start falling.\n")
@@ -45,8 +88,7 @@ def open_hibernation_pod():
                   "(a) grab onto the pod door \n"
                   "(b) grab a cord hanging from the ceiling \n"
                   "(c) risk injury from the fall\n")
-            fall_choice = input("What do you do? [a/b/c] \n> ")
-            return fall_choice
+            fall_choice()
         elif pod_choice == "no" or pod_choice == "n":
             print("\nYou chose not to open the hibernation pod.")
             print("You fell asleep. \n")
@@ -59,12 +101,12 @@ def open_hibernation_pod():
 
 
 # def restart_game_choice():
-#     global fall_choice  # Updates the global fall_choice
+#     global fall_decision  # Updates the global fall_decision
 #     global cut_state    # Updates the global cut_state
 #     restart_choice = input("Do you want to restart the game? [y/n] \n> ")
 #     if restart_choice == "y" or restart_choice == "yes":
 #         print("\nRestarting game!\n")
-#         fall_choice = None
+#         fall_decision = None
 #         cut_state = 0
 #         start_game_message()
 #         open_hibernation_pod()
@@ -74,10 +116,11 @@ def open_hibernation_pod():
 #         quit()
 
 
-fall_choice = None
+fall_decision = None
 cut_state = 0
 navigation_threat = 0
 bleeding = False
+reboot_code = 29137
 
 
 def bleeding_wound(cut_state):
@@ -153,6 +196,9 @@ def control_room_choose_path():
     while True:
         control_path_choice = input("Which path would you like to "
                                     "take? [a/left or b/right] \n> ").lower()
+        if control_path_choice == "end":
+            end_game()
+
         if control_path_choice == "a" or control_path_choice == "left":
             print("You head left towards the Cargo Hold.")
             if cut_state > 0:
@@ -185,6 +231,7 @@ def control_room():
     by leaving through the airlock.
     """
     global cut_state, navigation_threat
+
     if bleeding is False:
         clear()
     print("You reach the Control Room.")
@@ -192,25 +239,33 @@ def control_room():
           "and blinking lights in this room.")
     print("Would you like to explore the screens "
           "or continue on?\n")
-    control_room_options = input("Do you [a/explore or b/continue]? "
-                                 "\n> ").lower()
 
-    if control_room_options == "explore" or control_room_options == "a":
-        print("\nYou look at all of the screens. You reach one "
-              "that is blinking with multiple error messages.")
-        print("You start reading the messages, but one catches "
-              "your eye.\n")
-        print(("Imminent threat!!! Navigation failure! Manual "
-              "reboot necessary to recalibrate system.\n").upper())
-        print("...you must find the airlock, leave the spaceship and "
-              "manually reboot the system from the outside.")
-        navigation_threat = navigation_failure(navigation_threat)
-        # Updates the navigation_threat
-    elif control_room_options == "continue" or control_room_options == "b":
-        print("You decide to ignore all of the screens and "
-              "continue on your way to explore the ship.")
-    else:
-        print("Incorrect input, please choose [a/explore or b/continue]")
+    while True:
+        control_room_options = input("Do you [a/explore or b/continue]? "
+                                     "\n> ").lower()
+
+        if control_room_options == "end":
+            end_game()
+
+        if control_room_options == "explore" or control_room_options == "a":
+            print("\nYou look at all of the screens. You reach one "
+                  "that is blinking with multiple error messages.")
+            print("You start reading the messages, but one catches "
+                  "your eye.\n")
+            print(("Imminent threat!!! Navigation failure! Manual "
+                  "reboot necessary to recalibrate system.\n").upper())
+            print("...you must find the airlock, leave the spaceship and "
+                  "manually reboot the system from the outside.")
+            print(f"System reboot code: {reboot_code}")
+            navigation_threat = navigation_failure(navigation_threat)
+            break
+            # Updates the navigation_threat
+        elif control_room_options == "continue" or control_room_options == "b":
+            print("You decide to ignore all of the screens and "
+                  "continue on your way to explore the ship.")
+            break
+        else:
+            print("Incorrect input, please choose [a/explore or b/continue]")
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
         # Updates the cut_state
@@ -269,46 +324,51 @@ def med_bay_choose_path():
     print("To your left you can see the long winding corridor "
           "that will take you to the Observation Deck[a]")
     print("To your right you have a straight path into the Library[b]\n")
-    med_bay_path_choice = input("What would you like to explore? "
-                                "[a/left or b/right] \n> ").lower()
 
-    if med_bay_path_choice == "a" or med_bay_path_choice == "left":
-        print("\nYou take the long winding corridor towards the "
-              "Observation Deck.")
-        print("You turn the corner and find yourself rendered speechless "
-              "by the most breathtaking sight you ever witnessed.\n")
-        print("The room is an enormous, circular cascading staircase, "
-              "offering a panoramic view of a brilliant tapestry of stars "
-              "and planets gracing throught the glass wall.\n")
-        print("You sit down, taking in the view, feeling humbled and small "
-              "in the vastness of the universe that surrounds you.")
-        print("You feel at home. As if you were meant to be there.\n")
-        print("Time stretches on, but you decide it is time to continue "
-              "your exploration. \nYou silently promise yourself to return "
-              "to this place.")
-    elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
-        print("\nYou decide to head through the small straight corridor to "
-              "your right")
-        print("As you begin to walk, you can't help but be awed by the "
-              "vastness of the library; its expanse seems to stretch on "
-              "endlessly...\n")
-        print('You recall the brochures you received about the expedition. '
-              '"Our Library holds every book in human existence, in every '
-              'language. All books are also available in digital, audio and '
-              'holographic form."\n')
-        print("In center of the room, you see a single book open on the "
-              "table. It peaks your interest...")
-        print("You approach it, looking arround you, trying to see if "
-              "there is someone else there, someone else that is awake "
-              "same as you are.\n")
-        shout = ("Hello, is there anybody here??").upper()
-        print(f"You shout: {shout}. \n But nobody answers. "
-              "\nYou are left intrigued. \nWho left that book?!\n")
-        print("You explore the room further, but decide it is time to "
-              "continue with your exploration of the ship.")
-    else:
-        print("\n Invalid input. Please choose [a/left or b/right]")
-        quit()
+    while True:
+        med_bay_path_choice = input("What would you like to explore? "
+                                    "[a/left or b/right] \n> ").lower()
+
+        if med_bay_path_choice == "end":
+            end_game()
+
+        if med_bay_path_choice == "a" or med_bay_path_choice == "left":
+            print("\nYou take the long winding corridor towards the "
+                  "Observation Deck.")
+            print("You turn the corner and find yourself rendered speechless "
+                  "by the most breathtaking sight you ever witnessed.\n")
+            print("The room is an enormous, circular cascading staircase, "
+                  "offering a panoramic view of a brilliant tapestry of stars "
+                  "and planets gracing throught the glass wall.\n")
+            print("You sit down, taking in the view, feeling humbled and small "
+                  "in the vastness of the universe that surrounds you.")
+            print("You feel at home. As if you were meant to be there.\n")
+            print("Time stretches on, but you decide it is time to continue "
+                  "your exploration. \nYou silently promise yourself to return "
+                  "to this place.")
+        elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
+            print("\nYou decide to head through the small straight corridor to "
+                  "your right")
+            print("As you begin to walk, you can't help but be awed by the "
+                  "vastness of the library; its expanse seems to stretch on "
+                  "endlessly...\n")
+            print('You recall the brochures you received about the expedition. '
+                  '"Our Library holds every book in human existence, in every '
+                  'language. All books are also available in digital, audio and '
+                  'holographic form."\n')
+            print("In center of the room, you see a single book open on the "
+                  "table. It peaks your interest...")
+            print("You approach it, looking arround you, trying to see if "
+                  "there is someone else there, someone else that is awake "
+                  "same as you are.\n")
+            shout = ("Hello, is there anybody here??").upper()
+            print(f"You shout: {shout}. \n But nobody answers. "
+                  "\nYou are left intrigued. \nWho left that book?!\n")
+            print("You explore the room further, but decide it is time to "
+                  "continue with your exploration of the ship.")
+        else:
+            print("\n Invalid input. Please choose [a/left or b/right]")
+        
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
         # Updates the cut_state
@@ -336,38 +396,45 @@ def med_bay():
     print("You remember all of the advertising the collective "
           "government made, trying to sell them for at "
           "home use back in the day.\n")
+    while True:
+        healing_chamber = input("Would you like to test your health? [y/n] \n> ")
 
-    healing_chamber = input("Would you like to test your health? [y/n] \n> ")
+        if healing_chamber == "end":
+            end_game()
 
-    if healing_chamber == "y" or healing_chamber == "yes":
-        print("\nScanning...\n")
-        print("Scan complete!")
-        if bleeding:
-            print("Anomaly detected.")
-            print("Wound detected on the left forearm.")
-            heal_wound = input("Would you like to heal the wound? "
-                               "[y/n] \n> ").lower()
+        if healing_chamber == "y" or healing_chamber == "yes":
+            print("\nScanning...\n")
+            print("Scan complete!")
+            if bleeding:
+                print("Anomaly detected.")
+                print("Wound detected on the left forearm.")
+                heal_wound = input("Would you like to heal the wound? "
+                                "[y/n] \n> ").lower()
 
-            if heal_wound == "y" or heal_wound == "yes":
-                healing_procedure()
-            elif heal_wound == "n" or heal_wound == "no":
-                forceful_healing_procedure()
-            print("Thank you for using Regenesis Chamber 3000")
+                if heal_wound == "y" or heal_wound == "yes":
+                    healing_procedure()
+                elif heal_wound == "n" or heal_wound == "no":
+                    forceful_healing_procedure()
+                elif heal_wound == "end":
+                    print("Thank you for playing, ending game at user request.")
+                    print("Game Ended!")
+                    quit()
+                print("Thank you for using Regenesis Chamber 3000")
+            else:
+                print("No anomalies detected.")
+                print("\nYou are a healthy specimen.\n")
+            print("Thank you for using Regenesis Chamber 3000\n")
+            med_bay_choose_path()
+        elif healing_chamber == "n" or healing_chamber == "no":
+            med_bay_choose_path()
+            if cut_state > 0:
+                cut_state = bleeding_wound(cut_state)
+                # Updates the cut_state
         else:
-            print("No anomalies detected.")
-            print("\nYou are a healthy specimen.\n")
-        print("Thank you for using Regenesis Chamber 3000\n")
-        med_bay_choose_path()
-    elif healing_chamber == "n" or healing_chamber == "no":
-        med_bay_choose_path()
-        if cut_state > 0:
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
-    else:
-        print("\nInvalid input. Please choose either yes/y or no/n")
+            print("\nInvalid input. Please choose either yes/y or no/n")
 
 
-def choose_path(fall_choice):
+def choose_path(fall_decision):
     """
     Sets up the game progress depending on users choice at the
     beginning of the game.
@@ -379,24 +446,27 @@ def choose_path(fall_choice):
         path_choice = input("Which path would you like to "
                             "take? [a/straight or b/right] \n> ").lower()
 
+        if path_choice == "end":
+            end_game()
+
         if (path_choice == "a" or path_choice == "straight"
-                and fall_choice == "a"):
+                and fall_decision == "a"):
             print("You head straight towards the Control Room.")
             print("Eager to continue exploring.\n")
             control_room()
         elif (path_choice == "a" or path_choice == "straight"
-              and fall_choice == "c"):
+              and fall_decision == "c"):
             print("You head straight towards the Control Room.\n")
             cut_state = bleeding_wound(cut_state)
             control_room()
             # Updates the cut_state
         elif (path_choice == "b" or path_choice == "right"
-              and fall_choice == "a"):
+              and fall_decision == "a"):
             print("You head right towards the Med Bay.")
             print("Eager to continue exploring.")
             med_bay()
         elif (path_choice == "b" or path_choice == "right"
-              and fall_choice == "c"):
+              and fall_decision == "c"):
             print("You head right towards the Med Bay.")
             print("Where hopefully you will find "
                   "the bandages needed to stop the bleeding.\n")
@@ -405,7 +475,6 @@ def choose_path(fall_choice):
             med_bay()
         else:
             print("Invalid input. Please choose [a/straight or b/right]")
-            quit()
 
 
 def main():
@@ -414,37 +483,12 @@ def main():
     initial user choice of what they decided to do in the beginning of
     the game.
     """
+    clear()
     global bleeding
+
+    print("SPACESHIP ADVENTURE \n")
     start_game_message()
-    fall_choice = open_hibernation_pod()
-
-    if fall_choice == "a":
-        print("You managed to grab onto the pod door")
-        print("You regained your balance and start exploring. You are "
-              "in the room containing hibernation pods.\n")
-        print("You see two paths, you can either go straight "
-              "towards the ship Control Room, or to the right "
-              "towards the Med Bay.")
-        choose_path(fall_choice)
-    elif fall_choice == "b":
-        print("You accidentally grabbed the electrical cord "
-              "and got electrocuted.")
-        print("You died.")
-        print("The End.")
-        quit()
-    elif fall_choice == "c":
-        print("You fell and cut your hand; you are bleeding.")
-        print("You should find some bandages to cover the wound.\n")
-        print("You start exploring the room.\n")
-        print("You see two paths, you can either go "
-              "straight towards the Control Room[a] "
-              "or to the right towards the Med Bay.[b]")
-        bleeding = True
-        choose_path(fall_choice)
-    else:
-        print("You fell and back into the hibernation pod "
-              "and lost consciousness.")
-
+    open_hibernation_pod()
 
 if __name__ == "__main__":
     main()
