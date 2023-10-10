@@ -152,8 +152,8 @@ def control_room_choose_path():
           "go right into the Engineering Bay [b]?")
     while True:
         control_path_choice = input("Which path would you like to "
-                                    "take? [a/b] \n> ").lower()
-        if control_path_choice == "a" or control_path_choice == "cargo hold":
+                                    "take? [a/left or b/right] \n> ").lower()
+        if control_path_choice == "a" or control_path_choice == "left":
             print("You head left towards the Cargo Hold.")
             if cut_state > 0:
                 cut_state = bleeding_wound(cut_state)
@@ -161,10 +161,7 @@ def control_room_choose_path():
             if navigation_threat > 0:
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
-        elif (control_path_choice == "b" or
-              control_path_choice == "engineering bay" or
-              control_path_choice == "engineering" or
-              control_path_choice == "engineer"):
+        elif control_path_choice == "b" or control_path_choice == "right":
             print("You head right towards the Engineering Bay.")
             print("Wondering what might you find there.")
             if cut_state > 0:
@@ -174,7 +171,7 @@ def control_room_choose_path():
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
         else:
-            print("Invalid input, please choose either [a/b]")
+            print("Invalid input, please choose either [a/left or b/right]")
             quit()
 
 
@@ -195,9 +192,10 @@ def control_room():
           "and blinking lights in this room.")
     print("Would you like to explore the screens "
           "or continue on?\n")
-    control_room_options = input("Do you [explore/continue]? \n> ").lower()
+    control_room_options = input("Do you [a/explore or b/continue]? "
+                                 "\n> ").lower()
 
-    if control_room_options == "explore":
+    if control_room_options == "explore" or control_room_options == "a":
         print("\nYou look at all of the screens. You reach one "
               "that is blinking with multiple error messages.")
         print("You start reading the messages, but one catches "
@@ -208,11 +206,11 @@ def control_room():
               "manually reboot the system from the outside.")
         navigation_threat = navigation_failure(navigation_threat)
         # Updates the navigation_threat
-    elif control_room_options == "continue":
+    elif control_room_options == "continue" or control_room_options == "b":
         print("You decide to ignore all of the screens and "
               "continue on your way to explore the ship.")
     else:
-        print("Incorrect input, please choose [explore/continue]")
+        print("Incorrect input, please choose [a/explore or b/continue]")
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
         # Updates the cut_state
@@ -272,9 +270,9 @@ def med_bay_choose_path():
           "that will take you to the Observation Deck[a]")
     print("To your right you have a straight path into the Library[b]\n")
     med_bay_path_choice = input("What would you like to explore? "
-                                "[a/b] \n> ").lower()
+                                "[a/left or b/right] \n> ").lower()
 
-    if med_bay_path_choice == "a" or med_bay_path_choice == "deck":
+    if med_bay_path_choice == "a" or med_bay_path_choice == "left":
         print("\nYou take the long winding corridor towards the "
               "Observation Deck.")
         print("You turn the corner and find yourself rendered speechless "
@@ -288,7 +286,7 @@ def med_bay_choose_path():
         print("Time stretches on, but you decide it is time to continue "
               "your exploration. \nYou silently promise yourself to return "
               "to this place.")
-    elif med_bay_path_choice == "b" or med_bay_path_choice == "library":
+    elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
         print("\nYou decide to head through the small straight corridor to "
               "your right")
         print("As you begin to walk, you can't help but be awed by the "
@@ -309,7 +307,7 @@ def med_bay_choose_path():
         print("You explore the room further, but decide it is time to "
               "continue with your exploration of the ship.")
     else:
-        print("\n Invalid input. Please choose [a/b]")
+        print("\n Invalid input. Please choose [a/left or b/right]")
         quit()
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
@@ -365,6 +363,8 @@ def med_bay():
         if cut_state > 0:
             cut_state = bleeding_wound(cut_state)
             # Updates the cut_state
+    else:
+        print("\nInvalid input. Please choose either yes/y or no/n")
 
 
 def choose_path(fall_choice):
@@ -377,22 +377,26 @@ def choose_path(fall_choice):
     global cut_state
     while True:
         path_choice = input("Which path would you like to "
-                            "take? [a/b] \n> ").lower()
+                            "take? [a/straight or b/right] \n> ").lower()
 
-        if path_choice == "a" and fall_choice == "a":
+        if (path_choice == "a" or path_choice == "straight"
+                and fall_choice == "a"):
             print("You head straight towards the Control Room.")
             print("Eager to continue exploring.\n")
             control_room()
-        elif path_choice == "a" and fall_choice == "c":
+        elif (path_choice == "a" or path_choice == "straight"
+              and fall_choice == "c"):
             print("You head straight towards the Control Room.\n")
             cut_state = bleeding_wound(cut_state)
             control_room()
             # Updates the cut_state
-        elif path_choice == "b" and fall_choice == "a":
+        elif (path_choice == "b" or path_choice == "right"
+              and fall_choice == "a"):
             print("You head right towards the Med Bay.")
             print("Eager to continue exploring.")
             med_bay()
-        elif path_choice == "b" and fall_choice == "c":
+        elif (path_choice == "b" or path_choice == "right"
+              and fall_choice == "c"):
             print("You head right towards the Med Bay.")
             print("Where hopefully you will find "
                   "the bandages needed to stop the bleeding.\n")
@@ -400,7 +404,7 @@ def choose_path(fall_choice):
             # Updates the cut_state
             med_bay()
         else:
-            print("Invalid input. Please choose [a/b]")
+            print("Invalid input. Please choose [a/straight or b/right]")
             quit()
 
 
