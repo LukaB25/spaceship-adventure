@@ -187,8 +187,9 @@ def control_room():
     everyone on the spaceship by fixing the navigation system manually
     by leaving through the airlock.
     """
-    global navigation_threat
-    clear()
+    global cut_state, navigation_threat
+    if bleeding is False:
+        clear()
     print("You reach the Control Room.")
     print("You are fascinated by all of the screens "
           "and blinking lights in this room.")
@@ -212,6 +213,9 @@ def control_room():
               "continue on your way to explore the ship.")
     else:
         print("Incorrect input, please choose [explore/continue]")
+    if cut_state > 0:
+        cut_state = bleeding_wound(cut_state)
+        # Updates the cut_state
     control_room_choose_path()
 
 
@@ -260,6 +264,7 @@ def med_bay_choose_path():
     The user can choose to continue exploring the spaceship and continue
     moving through the rest of the rooms left to explore.
     """
+    global cut_state
     print("You walk through the Med Bay exploring.")
     print("You pass around the Regenesis Chamber 3000 and "
           "reach two corridors.\n")
@@ -306,6 +311,9 @@ def med_bay_choose_path():
     else:
         print("\n Invalid input. Please choose [a/b]")
         quit()
+    if cut_state > 0:
+        cut_state = bleeding_wound(cut_state)
+        # Updates the cut_state
 
 
 def med_bay():
@@ -315,7 +323,9 @@ def med_bay():
     heal their wound and stop the bleeding if they were damaged at the start
     or they can continue with their exploration of the spaceship.
     """
-    clear()
+    global cut_state
+    if bleeding is False:
+        clear()
 
     print("You enter the Med Bay. Straight away you notice "
           "all of the medical supplies. You are mesmerised "
