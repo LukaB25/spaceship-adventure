@@ -260,6 +260,52 @@ def med_bay_choose_path():
     The user can choose to continue exploring the spaceship and continue
     moving through the rest of the rooms left to explore.
     """
+    print("You walk through the Med Bay exploring.")
+    print("You pass around the Regenesis Chamber 3000 and "
+          "reach two corridors.\n")
+    print("To your left you can see the long winding corridor "
+          "that will take you to the Observation Deck[a]")
+    print("To your right you have a straight path into the Library[b]\n")
+    med_bay_path_choice = input("What would you like to explore? "
+                                "[a/b] \n> ").lower()
+
+    if med_bay_path_choice == "a" or med_bay_path_choice == "deck":
+        print("\nYou take the long winding corridor towards the "
+              "Observation Deck.")
+        print("You turn the corner and find yourself rendered speechless "
+              "by the most breathtaking sight you ever witnessed.\n")
+        print("The room is an enormous, circular cascading staircase, "
+              "offering a panoramic view of a brilliant tapestry of stars "
+              "and planets gracing throught the glass wall.\n")
+        print("You sit down, taking in the view, feeling humbled and small "
+              "in the vastness of the universe that surrounds you.")
+        print("You feel at home. As if you were meant to be there.\n")
+        print("Time stretches on, but you decide it is time to continue "
+              "your exploration. \nYou silently promise yourself to return "
+              "to this place.")
+    elif med_bay_path_choice == "b" or med_bay_path_choice == "library":
+        print("\nYou decide to head through the small straight corridor to "
+              "your right")
+        print("As you begin to walk, you can't help but be awed by the "
+              "vastness of the library; its expanse seems to stretch on "
+              "endlessly...\n")
+        print('You recall the brochures you received about the expedition. '
+              '"Our Library holds every book in human existence, in every '
+              'language. All books are also available in digital, audio and '
+              'holographic form."\n')
+        print("In center of the room, you see a single book open on the "
+              "table. It peaks your interest...")
+        print("You approach it, looking arround you, trying to see if "
+              "there is someone else there, someone else that is awake "
+              "same as you are.\n")
+        shout = ("Hello, is there anybody here??").upper()
+        print(f"You shout: {shout}. \n But nobody answers. "
+              "\nYou are left intrigued. \nWho left that book?!\n")
+        print("You explore the room further, but decide it is time to "
+              "continue with your exploration of the ship.")
+    else:
+        print("\n Invalid input. Please choose [a/b]")
+        quit()
 
 
 def med_bay():
@@ -291,7 +337,8 @@ def med_bay():
         if bleeding:
             print("Anomaly detected.")
             print("Wound detected on the left forearm.")
-            heal_wound = input("Would you like to heal the wound? [y/n] \n> ")
+            heal_wound = input("Would you like to heal the wound? "
+                               "[y/n] \n> ").lower()
 
             if heal_wound == "y" or heal_wound == "yes":
                 healing_procedure()
@@ -301,7 +348,13 @@ def med_bay():
         else:
             print("No anomalies detected.")
             print("\nYou are a healthy specimen.\n")
-        print("Thank you for using Regenesis Chamber 3000")
+        print("Thank you for using Regenesis Chamber 3000\n")
+        med_bay_choose_path()
+    elif healing_chamber == "n" or healing_chamber == "no":
+        med_bay_choose_path()
+        if cut_state > 0:
+            cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
 
 
 def choose_path(fall_choice):
