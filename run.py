@@ -369,7 +369,10 @@ def med_bay():
 
 def choose_path(fall_choice):
     """
-    Sets up the game progress depending on users choices.
+    Sets up the game progress depending on users choice at the
+    beginning of the game.
+    User gets a different message depending on what they chose
+    to do in the beginning of the game.
     """
     global cut_state
     while True:
@@ -402,6 +405,11 @@ def choose_path(fall_choice):
 
 
 def main():
+    """
+    Starts the game progress and controls the outcomes depending on the
+    initial user choice of what they decided to do in the beginning of
+    the game.
+    """
     global bleeding
     start_game_message()
     fall_choice = open_hibernation_pod()
