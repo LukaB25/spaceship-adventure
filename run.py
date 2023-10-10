@@ -43,7 +43,7 @@ def start_game_message():
 def fall_choice():
     global bleeding
     while True:
-        fall_decision = input("What do you do? [a/b/c] \n> ")
+        fall_decision = input("What do you do? [a/b/c] \n> ").lower()
 
         if fall_decision == "end":
             end_game()
@@ -73,6 +73,8 @@ def fall_choice():
             choose_path(fall_decision)
         else:
             print("\nInvalid input. Try again.")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{fall_decision}"\n')
 
 
 def open_hibernation_pod():
@@ -102,6 +104,8 @@ def open_hibernation_pod():
                   "[y/n]\n")
         else:
             print("\nInvalid input. Please choose either yes/y or no/n")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{pod_choice}"\n')
 
 
 # def restart_game_choice():
@@ -267,7 +271,9 @@ def cargo_hold():
             print("You made a decision to continue exploring the ship.")
             print("Who knows what you might find next...")
         else:
-            print("Invalid input, please choose either [a/b/c/d]")
+            print("Invalid input, your choices are [a/b/c/d]")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{cargo_hold_options}"\n')
 
 
 def control_room_choose_path():
@@ -305,7 +311,9 @@ def control_room_choose_path():
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
         else:
-            print("Invalid input, please choose either [a/left or b/right]")
+            print("Invalid input, you can go either [a]left or [b]right")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{control_path_choice}"\n')
 
 
 def control_room():
@@ -352,7 +360,10 @@ def control_room():
                   "continue on your way to explore the ship.")
             break
         else:
-            print("Incorrect input, please choose [a/explore or b/continue]")
+            print("Incorrect input, please choose [a]explore or [b]continue")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{control_room_options}"\n')
+
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
         # Updates the cut_state
@@ -454,7 +465,9 @@ def med_bay_choose_path():
             print("You explore the room further, but decide it is time to "
                   "continue with your exploration of the ship.")
         else:
-            print("\n Invalid input. Please choose [a/left or b/right]")
+            print("\n Invalid input. Please choose [a]left or [b]right")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{med_bay_path_choice}"\n')
 
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
@@ -521,6 +534,8 @@ def med_bay():
                 # Updates the cut_state
         else:
             print("\nInvalid input. Please choose either yes/y or no/n")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{healing_chamber}"\n')
 
 
 def choose_path(fall_decision):
@@ -563,7 +578,9 @@ def choose_path(fall_decision):
             # Updates the cut_state
             med_bay()
         else:
-            print("Invalid input. Please choose [a/straight or b/right]")
+            print("Invalid input. Please choose [a]straight or [b]right")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{path_choice}"\n')
 
 
 def main():
