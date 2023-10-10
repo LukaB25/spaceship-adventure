@@ -25,11 +25,14 @@ def start_game_message():
     Offers some insight in the game for the user.
     """
     print("Welcome to your spaceship adventure!")
+    print('\nIf for any reason you decide to end the game, you can do so '
+          'by writing "end" into any input field at any stage of the '
+          'game.\n')
     print("It is a year 3076. You are an interplanetary traveler, "
           "at least that is what they said you will be. \n")
     print("Due to an overpopulation on our home planet Earth"
-          "the collective government devised a plan to send three million "
-          "people to the newly discovered habitable planet.")
+          "The Collective Government devised a plan to send three million "
+          "people to the newly discovered habitable planet 'Terra Novus'.")
     print("You have left your planet for a long trip "
           "through the vast space in search of a better life.\n")
     print("You are suddenly awoken. You woke up before all other travellers, "
@@ -182,6 +185,74 @@ def navigation_failure(navigation_threat):
     return navigation_threat
 
 
+def cargo_hold():
+    """
+    Handles the player's actions and choices when they reach the Cargo Hold.
+    After a user reaches Control Room they can choose to explore the Cargo Hold,
+    go into the Engineering Bay or to use a lift to go down into Escape Pods.
+    """
+    global cut_state, navigation_threat
+    print("As you continue your exploration, you eventually reach "
+          "the massive Cargo Hold.")
+    print("The Cargo Hold is filled with an array of cargo: stacked "
+          "boxes, vital supplies, sturdy containers, various vehicles, "
+          "reserves of fuel, an assortment of spare parts, live animal "
+          "specimens in their own special cryo-hibernation chambers and more.")
+
+    while True:
+        cargo_hold_options = input("Which part of the Cargo Hold "
+                                   "would you like to explore?\n"
+                                   "[a] boxes and supplies\n"
+                                   "[b] vehicles\n"
+                                   "[c] specimens\n"
+                                   "[d] continue on/ don't explore\n> ")
+        if cargo_hold_options == "end":
+            end_game()
+        if cargo_hold_options == "a" or cargo_hold_options == "box":
+            print("\nYou start reading the signs on all of the boxes and containers")
+            print("You have been searching through boxes for hours...")
+            print("You have discovered various Ancient Relics, Rare Minerals, "
+                  "advanced holo communicators...")
+            print("After spending another hour of searching you reached a "
+                  "heavily armoured cage containing various advanced weaponry "
+                  "and ammunition, mining and building tools...\n")
+            print("You decide to stop exploring the supply boxes and containers")
+        elif (cargo_hold_options == "b" or 
+              cargo_hold_options == "vehicles"):
+              print("\nYou continue walking among all of the advanced and antique "
+                    "vehicles and machinery.")
+              print("You are awed by the vast array before your sight.")
+              print("There are numerous hover crafts, flying saucers, antique "
+                    " cars, excavators, diggers, but also the all mighty Structure"
+                    " Synthesizers and Instant Fabricators")
+              print("You remember the first time you saw Structure Synthesizer at "
+                    "work. It managed to construct the whole ten story building in "
+                    "a matter of seconds.")
+              print("After hours of exploring you decide to stop exploring the "
+                    "vehicles that The Collective Government supplied us with.")
+        elif (cargo_hold_options == "c" or 
+              cargo_hold_options == "specimens"):
+              print("You choose to examine the collection of live animal specimens "
+                    "that were sent with us on this journey to Terra Novus.")
+              print("You find yourself at a loss for words, completely captivated "
+                    "by the magnificent sight.")
+              print("All the specimens lay within specialized cryo-hibernation chambers, "
+                    "in a peaceful slumber awaiting our arrival to the new world, our "
+                    "new home.")
+              print("We were equipped with an extensive array of livestock, mammals, a "
+                    "variety of avian species, as well as insects and critters, and new "
+                    "variety of spicies that scientist managed to create just for this "
+                    "expedition all intended to populate our new world.")
+              print("You could continue exploring the animal specimens for days, but "
+                    "you know it is time to continue with your exploration of the ship.")
+        elif (cargo_hold_options == "d" or 
+              cargo_hold_options == "continue"):
+              print("You made a decision to continue exploring the ship.")
+              print("Who knows what you might find next...")
+        else:
+            print("Invalid input, please choose either [a/b/c/d]")
+
+
 def control_room_choose_path():
     """
     Handles the player's actions and choices which
@@ -218,7 +289,6 @@ def control_room_choose_path():
                 # Updates the navigation_threat
         else:
             print("Invalid input, please choose either [a/left or b/right]")
-            quit()
 
 
 def control_room():
