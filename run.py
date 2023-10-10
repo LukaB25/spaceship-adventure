@@ -41,6 +41,7 @@ def start_game_message():
 
 
 def fall_choice():
+    global bleeding
     while True:
         fall_decision = input("What do you do? [a/b/c] \n> ")
 
@@ -188,8 +189,9 @@ def navigation_failure(navigation_threat):
 def cargo_hold():
     """
     Handles the player's actions and choices when they reach the Cargo Hold.
-    After a user reaches Control Room they can choose to explore the Cargo Hold,
-    go into the Engineering Bay or to use a lift to go down into Escape Pods.
+    After a user reaches Control Room they can choose to explore the Cargo
+    Hold, go into the Engineering Bay or to use a lift to go down into
+    Escape Pods.
     """
     global cut_state, navigation_threat
     print("As you continue your exploration, you eventually reach "
@@ -208,47 +210,62 @@ def cargo_hold():
                                    "[d] continue on/ don't explore\n> ")
         if cargo_hold_options == "end":
             end_game()
+        if cut_state > 0:
+            cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
+        if navigation_threat > 0:
+            navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
         if cargo_hold_options == "a" or cargo_hold_options == "box":
-            print("\nYou start reading the signs on all of the boxes and containers")
+            print("\nYou start reading the signs on all of the boxes "
+                  "and containers")
             print("You have been searching through boxes for hours...")
             print("You have discovered various Ancient Relics, Rare Minerals, "
                   "advanced holo communicators...")
             print("After spending another hour of searching you reached a "
-                  "heavily armoured cage containing various advanced weaponry "
-                  "and ammunition, mining and building tools...\n")
-            print("You decide to stop exploring the supply boxes and containers")
-        elif (cargo_hold_options == "b" or 
-              cargo_hold_options == "vehicles"):
-              print("\nYou continue walking among all of the advanced and antique "
-                    "vehicles and machinery.")
-              print("You are awed by the vast array before your sight.")
-              print("There are numerous hover crafts, flying saucers, antique "
-                    " cars, excavators, diggers, but also the all mighty Structure"
-                    " Synthesizers and Instant Fabricators")
-              print("You remember the first time you saw Structure Synthesizer at "
-                    "work. It managed to construct the whole ten story building in "
-                    "a matter of seconds.")
-              print("After hours of exploring you decide to stop exploring the "
-                    "vehicles that The Collective Government supplied us with.")
-        elif (cargo_hold_options == "c" or 
-              cargo_hold_options == "specimens"):
-              print("You choose to examine the collection of live animal specimens "
-                    "that were sent with us on this journey to Terra Novus.")
-              print("You find yourself at a loss for words, completely captivated "
-                    "by the magnificent sight.")
-              print("All the specimens lay within specialized cryo-hibernation chambers, "
-                    "in a peaceful slumber awaiting our arrival to the new world, our "
-                    "new home.")
-              print("We were equipped with an extensive array of livestock, mammals, a "
-                    "variety of avian species, as well as insects and critters, and new "
-                    "variety of spicies that scientist managed to create just for this "
-                    "expedition all intended to populate our new world.")
-              print("You could continue exploring the animal specimens for days, but "
-                    "you know it is time to continue with your exploration of the ship.")
-        elif (cargo_hold_options == "d" or 
-              cargo_hold_options == "continue"):
-              print("You made a decision to continue exploring the ship.")
-              print("Who knows what you might find next...")
+                  "heavily armoured cage containing various advanced "
+                  "weaponry and ammunition, mining and building "
+                  "tools...\n")
+            print("You decide to stop exploring the supply boxes "
+                  "and containers")
+        elif (cargo_hold_options == "b" or
+                cargo_hold_options == "vehicles"):
+            print("\nYou continue walking among all of the advanced "
+                  "and antique vehicles and machinery.")
+            print("You are awed by the vast array before your sight.")
+            print("There are numerous hover crafts, flying saucers, "
+                  "antique cars, excavators, diggers, but also "
+                  "the all mighty Structure Synthesizers and "
+                  "Instant Fabricators")
+            print("You remember the first time you saw Structure "
+                  "Synthesizer at work. It managed to construct "
+                  "the whole ten story building in a matter of "
+                  "seconds.")
+            print("After hours of exploring you decide to stop "
+                  "exploring the vehicles that The Collective "
+                  "Government supplied us with.")
+        elif (cargo_hold_options == "c" or
+                cargo_hold_options == "specimens"):
+            print("You choose to examine the collection of live "
+                  "animal specimens that were sent with us on this "
+                  "journey to Terra Novus.")
+            print("You find yourself at a loss for words, completely "
+                  "captivated by the magnificent sight.")
+            print("All the specimens lay within specialized cryo-hibernation "
+                  "chambers, in a peaceful slumber awaiting our arrival to "
+                  "the new world, our new home.")
+            print("We were equipped with an extensive array of livestock, "
+                  "mammals, a variety of avian species, as well as insects "
+                  "and critters, and new variety of spicies that scientist "
+                  "managed to create just for this expedition all intended "
+                  "to populate our new world.")
+            print("You could continue exploring the animal specimens for "
+                  "days, but you know it is time to continue with your "
+                  "exploration of the ship.")
+        elif (cargo_hold_options == "d" or
+                cargo_hold_options == "continue"):
+            print("You made a decision to continue exploring the ship.")
+            print("Who knows what you might find next...")
         else:
             print("Invalid input, please choose either [a/b/c/d]")
 
@@ -405,27 +422,27 @@ def med_bay_choose_path():
         if med_bay_path_choice == "a" or med_bay_path_choice == "left":
             print("\nYou take the long winding corridor towards the "
                   "Observation Deck.")
-            print("You turn the corner and find yourself rendered speechless "
-                  "by the most breathtaking sight you ever witnessed.\n")
+            print("You turn the corner and find yourself rendered speechless"
+                  " by the most breathtaking sight you ever witnessed.\n")
             print("The room is an enormous, circular cascading staircase, "
-                  "offering a panoramic view of a brilliant tapestry of stars "
-                  "and planets gracing throught the glass wall.\n")
-            print("You sit down, taking in the view, feeling humbled and small "
-                  "in the vastness of the universe that surrounds you.")
+                  "offering a panoramic view of a brilliant tapestry of stars"
+                  " and planets gracing throught the glass wall.\n")
+            print("You sit down, taking in the view, feeling humbled and small"
+                  " in the vastness of the universe that surrounds you.")
             print("You feel at home. As if you were meant to be there.\n")
             print("Time stretches on, but you decide it is time to continue "
-                  "your exploration. \nYou silently promise yourself to return "
-                  "to this place.")
+                  "your exploration. \nYou silently promise yourself to return"
+                  " to this place.")
         elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
-            print("\nYou decide to head through the small straight corridor to "
-                  "your right")
+            print("\nYou decide to head through the small straight corridor"
+                  " to your right")
             print("As you begin to walk, you can't help but be awed by the "
-                  "vastness of the library; its expanse seems to stretch on "
+                  "vastness of the library; its expanse seems to stretch on"
                   "endlessly...\n")
-            print('You recall the brochures you received about the expedition. '
-                  '"Our Library holds every book in human existence, in every '
-                  'language. All books are also available in digital, audio and '
-                  'holographic form."\n')
+            print('You recall the brochures you received about the expedition.'
+                  ' "Our Library holds every book in human existence, in every'
+                  ' language. All books are also available in digital, audio '
+                  'and holographic form."\n')
             print("In center of the room, you see a single book open on the "
                   "table. It peaks your interest...")
             print("You approach it, looking arround you, trying to see if "
@@ -438,7 +455,7 @@ def med_bay_choose_path():
                   "continue with your exploration of the ship.")
         else:
             print("\n Invalid input. Please choose [a/left or b/right]")
-        
+
     if cut_state > 0:
         cut_state = bleeding_wound(cut_state)
         # Updates the cut_state
@@ -467,7 +484,8 @@ def med_bay():
           "government made, trying to sell them for at "
           "home use back in the day.\n")
     while True:
-        healing_chamber = input("Would you like to test your health? [y/n] \n> ")
+        healing_chamber = input("Would you like to test your health? "
+                                "[y/n] \n> ")
 
         if healing_chamber == "end":
             end_game()
@@ -479,14 +497,15 @@ def med_bay():
                 print("Anomaly detected.")
                 print("Wound detected on the left forearm.")
                 heal_wound = input("Would you like to heal the wound? "
-                                "[y/n] \n> ").lower()
+                                   "[y/n] \n> ").lower()
 
                 if heal_wound == "y" or heal_wound == "yes":
                     healing_procedure()
                 elif heal_wound == "n" or heal_wound == "no":
                     forceful_healing_procedure()
                 elif heal_wound == "end":
-                    print("Thank you for playing, ending game at user request.")
+                    print("Thank you for playing, ending game at user "
+                          "request.")
                     print("Game Ended!")
                     quit()
                 print("Thank you for using Regenesis Chamber 3000")
@@ -554,11 +573,11 @@ def main():
     the game.
     """
     clear()
-    global bleeding
 
     print("SPACESHIP ADVENTURE \n")
     start_game_message()
     open_hibernation_pod()
+
 
 if __name__ == "__main__":
     main()
