@@ -40,8 +40,36 @@ def start_game_message():
     print("Are you ready to open and leave your hibernation pod? [y/n]")
 
 
-def fall_choice():
+fall_decision = None
+cut_state = 0
+navigation_threat = 0
+bleeding = False
+reboot_code = 29137
+
+
+def bleeding_wound(cut_state):
+    """
+    Handles user choice to fall and deals damage until user either finds
+    bandages or reaches critical state.
+    """
     global bleeding
+    if bleeding:
+        cut_state += 1
+        if cut_state <= 5:
+            print("\nYou are slowly bleeding out, "
+                  "find some bandages quickly.")
+            print(f"You are hurt, reach the Med Bay: {cut_state}/6\n")
+        elif cut_state == 6:
+            print(f"\nYou reached critical state {cut_state}/6. "
+                  "You didn't reach Med Bay.")
+            print("You died.\n")
+            bleeding = False
+            quit()
+    return cut_state
+
+
+def fall_choice():
+    global bleeding, cut_state
     while True:
         fall_decision = input("What do you do? [a/b/c] \n> ").lower()
 
@@ -64,12 +92,17 @@ def fall_choice():
             quit()
         elif fall_decision == "c":
             print("You fell and cut your hand; you are bleeding.")
-            print("You should find some bandages to cover the wound.\n")
+            print("You should find some bandages to cover the wound.")
+
+            bleeding = True
+            cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
+
             print("You start exploring the room.\n")
             print("You see two paths, you can either go "
                   "straight towards the Control Room[a] "
                   "or to the right towards the Med Bay.[b]")
-            bleeding = True
+            
             choose_path(fall_decision)
         else:
             print("\nInvalid input. Try again.")
@@ -122,34 +155,6 @@ def open_hibernation_pod():
 #         print("Thank you for playing!")
 #         print("Closing the game")
 #         quit()
-
-
-fall_decision = None
-cut_state = 0
-navigation_threat = 0
-bleeding = False
-reboot_code = 29137
-
-
-def bleeding_wound(cut_state):
-    """
-    Handles user choice to fall and deals damage until user either finds
-    bandages or reaches critical state.
-    """
-    global bleeding
-    if bleeding:
-        cut_state += 1
-        if cut_state <= 5:
-            print("You are slowly bleeding out, "
-                  "find some bandages quickly.")
-            print(f"You are hurt, reach the Med Bay: {cut_state}/6")
-        elif cut_state == 6:
-            print(f"You reached critical state {cut_state}/6. "
-                  "You didn't reach Med Bay.")
-            print("You died.")
-            bleeding = False
-            quit()
-    return cut_state
 
 
 def navigation_failure(navigation_threat):
@@ -209,6 +214,15 @@ def engineering_bay():
     """
 
 
+def escape_pods():
+    """
+    Handles the player's actions and choices when they arrive to the
+    Escape Pods.
+    The user can choose to save themselves or use a lift and go back into
+    Cargo Hold and continue to explore the rest of the ship.
+    """
+
+
 def cargo_hold_path_choice():
     """
     Handles the player's actions and choices when they decide to leave
@@ -216,7 +230,50 @@ def cargo_hold_path_choice():
     The user can choose to leave the Control Room across the room towards
     the Engineering Bay or to use a lift to go down into Escape Pods.
     """
+    print("\nAs you start to leave, a large Egyptian vase falls in "
+          "the distance. You jump, startled out of your mind, you "
+          "run in the direction of the fallen vase.")
+    print("You explore the rubble and realise that the vase couldn't"
+          " have fallen on it's own. You see a shadow running away from "
+          "you.")
+    print("You decide to follow, but soon find yourself at the cross "
+          "section. Which way do you follow?"
+          "[a] left into the unmarked lift that takes you down a level"
+          "[b] right into the Engineering Bay")
 
+    cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
+
+    while True:
+        cargo_hold_path_options = input("\n> ")
+
+        if cargo_hold_options == "end":
+            end_game()
+        if navigation_threat > 0:
+            navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
+
+        if (cargo_hold_path_options == "a" or 
+                cargo_hold_path_options == "left"):
+            print("You step into the mysterious elevator, its metal doors "
+                  "slide shut as it whisks you away to a lower level.")
+            print("Riding the elevator, you realise you don't know where "
+                  "you are going, you start to doubt whether it was a "
+                  "smart idea just to jump in like that...\n")
+            escape_pods()
+        elif (cargo_hold_path_options == "b" or 
+              cargo_hold_path_options == "right"):
+            print("You decide to follow to the Engineering Bay, hoping "
+                  "your mind is not playing tricks on you, or worse"
+                  "you have started loosing your mind and are becoming"
+                  " delirious.")
+            print("You run as fast as your legs can carry you. But "
+                  "can't seem to catch up.")
+            engineering_bay()
+        else:
+            print("Invalid input, your choices are [a/b/c/d]")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{cargo_hold_path_options}"\n')
 
 
 def cargo_hold():
@@ -233,6 +290,9 @@ def cargo_hold():
           "reserves of fuel, an assortment of spare parts, live animal "
           "specimens in their own special cryo-hibernation chambers and more.")
 
+    cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
+
     while True:
         cargo_hold_options = input("Which part of the Cargo Hold "
                                    "would you like to explore?\n"
@@ -240,11 +300,10 @@ def cargo_hold():
                                    "[b] vehicles\n"
                                    "[c] specimens\n"
                                    "[d] continue on/ don't explore\n> ")
+
         if cargo_hold_options == "end":
             end_game()
-        if cut_state > 0:
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
+        
         if navigation_threat > 0:
             navigation_threat = navigation_failure(navigation_threat)
             # Updates the navigation_threat
@@ -298,6 +357,7 @@ def cargo_hold():
                 cargo_hold_options == "continue"):
             print("You made a decision to continue exploring the ship.")
             print("Who knows what you might find next...")
+            cargo_hold_path_choice()
         else:
             print("Invalid input, your choices are [a/b/c/d]")
             print('You can end the game by typing "end"')
@@ -315,6 +375,7 @@ def control_room_choose_path():
     print("You find yourself at the cross section. Your options are: \n"
           "Go left into the Cargo Hold [a] or "
           "go right into the Engineering Bay [b]?")
+          
     while True:
         control_path_choice = input("Which path would you like to "
                                     "take? [a/left or b/right] \n> ").lower()
@@ -324,9 +385,8 @@ def control_room_choose_path():
         if control_path_choice == "a" or control_path_choice == "left":
             print("You head left towards the Cargo Hold.")
             cargo_hold()
-            if cut_state > 0:
-                cut_state = bleeding_wound(cut_state)
-                # Updates the cut_state
+            cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
             if navigation_threat > 0:
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
@@ -334,9 +394,8 @@ def control_room_choose_path():
             print("You head right towards the Engineering Bay.")
             print("Wondering what might you find there.")
             engineering_bay()
-            if cut_state > 0:
-                cut_state = bleeding_wound(cut_state)
-                # Updates the cut_state
+            cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
             if navigation_threat > 0:
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
@@ -359,10 +418,14 @@ def control_room():
 
     if bleeding is False:
         clear()
-    print("You reach the Control Room.")
+
+    cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
+
+    print("\nYou reach the Control Room.")
     print("You are fascinated by all of the screens "
           "and blinking lights in this room.")
-    print("Would you like to explore the screens "
+    print("You can explore the screens "
           "or continue on?\n")
 
     while True:
@@ -394,9 +457,6 @@ def control_room():
             print('You can end the game by typing "end"')
             print(f'\nYou typed in "{control_room_options}"\n')
 
-    if cut_state > 0:
-        cut_state = bleeding_wound(cut_state)
-        # Updates the cut_state
     control_room_choose_path()
 
 
@@ -453,6 +513,9 @@ def med_bay_choose_path():
           "that will take you to the Observation Deck[a]")
     print("To your right you have a straight path into the Library[b]\n")
 
+    cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
+
     while True:
         med_bay_path_choice = input("What would you like to explore? "
                                     "[a/left or b/right] \n> ").lower()
@@ -499,10 +562,6 @@ def med_bay_choose_path():
             print('You can end the game by typing "end"')
             print(f'\nYou typed in "{med_bay_path_choice}"\n')
 
-    if cut_state > 0:
-        cut_state = bleeding_wound(cut_state)
-        # Updates the cut_state
-
 
 def med_bay():
     """
@@ -514,6 +573,9 @@ def med_bay():
     global cut_state
     if bleeding is False:
         clear()
+
+    cut_state = bleeding_wound(cut_state)
+            # Updates the cut_state
 
     print("You enter the Med Bay. Straight away you notice "
           "all of the medical supplies. You are mesmerised "
@@ -576,6 +638,7 @@ def choose_path(fall_decision):
     to do in the beginning of the game.
     """
     global cut_state
+
     while True:
         path_choice = input("Which path would you like to "
                             "take? [a/straight or b/right] \n> ").lower()
@@ -591,9 +654,7 @@ def choose_path(fall_decision):
         elif (path_choice == "a" or path_choice == "straight"
               and fall_decision == "c"):
             print("You head straight towards the Control Room.\n")
-            cut_state = bleeding_wound(cut_state)
             control_room()
-            # Updates the cut_state
         elif (path_choice == "b" or path_choice == "right"
               and fall_decision == "a"):
             print("You head right towards the Med Bay.")
@@ -604,8 +665,6 @@ def choose_path(fall_decision):
             print("You head right towards the Med Bay.")
             print("Where hopefully you will find "
                   "the bandages needed to stop the bleeding.\n")
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
             med_bay()
         else:
             print("Invalid input. Please choose [a]straight or [b]right")
