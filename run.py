@@ -190,12 +190,40 @@ def navigation_failure(navigation_threat):
     return navigation_threat
 
 
+def engineering_bay_path_choice():
+    """
+    Handles the player's actions and choices when they decide to leave the
+    Engineering Bay.
+    The user can choose to explore the Engineering Bay or head left to
+    leave towards the Cargo Hold, right to the observation deck or straight
+    ahead into the airlock.
+    """
+
+
+def engineering_bay():
+    """
+    Handles the player's actions and choices when they arrive to the
+    Engineering Bay.
+    The user can choose to explore the Engineering Bay or continue
+    on their way to explore the rest of the ship.
+    """
+
+
+def cargo_hold_path_choice():
+    """
+    Handles the player's actions and choices when they decide to leave
+    the Cargo Hold.
+    The user can choose to leave the Control Room across the room towards
+    the Engineering Bay or to use a lift to go down into Escape Pods.
+    """
+
+
+
 def cargo_hold():
     """
     Handles the player's actions and choices when they reach the Cargo Hold.
     After a user reaches Control Room they can choose to explore the Cargo
-    Hold, go into the Engineering Bay or to use a lift to go down into
-    Escape Pods.
+    Hold, or continue on exploring the ship.
     """
     global cut_state, navigation_threat
     print("As you continue your exploration, you eventually reach "
@@ -295,6 +323,7 @@ def control_room_choose_path():
 
         if control_path_choice == "a" or control_path_choice == "left":
             print("You head left towards the Cargo Hold.")
+            cargo_hold()
             if cut_state > 0:
                 cut_state = bleeding_wound(cut_state)
                 # Updates the cut_state
@@ -304,6 +333,7 @@ def control_room_choose_path():
         elif control_path_choice == "b" or control_path_choice == "right":
             print("You head right towards the Engineering Bay.")
             print("Wondering what might you find there.")
+            engineering_bay()
             if cut_state > 0:
                 cut_state = bleeding_wound(cut_state)
                 # Updates the cut_state
