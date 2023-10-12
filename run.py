@@ -43,6 +43,7 @@ def start_game_message():
 fall_decision = None
 cut_state = 0
 navigation_threat = 0
+navigation_error = False
 bleeding = False
 reboot_code = 29137
 
@@ -164,6 +165,7 @@ def navigation_failure(navigation_threat):
     The user will have certain amount of steps to reach the Airlock and to
     exit to repair the ships navigation controls.
     """
+    global navigation_error
     navigation_threat += 1
     if navigation_threat <= 3:
         print("\nNavigation failure! Approaching a critical "
@@ -192,6 +194,7 @@ def navigation_failure(navigation_threat):
         print("You died.")
         print("The End.")
         quit()
+    navigation_error = True
     return navigation_threat
 
 
@@ -214,6 +217,28 @@ def engineering_bay():
     """
 
 
+def cargo_hold_path_choice2():
+    """
+    Handles the player's actions and choices when they Come back from the
+    Escape Pods section.
+    The user can choose to leave the Control Room across the room towards
+    the Engineering Bay or to use a lift to go down into Escape Pods.
+    """
+    global cut_state, navigation_threat
+
+    cut_state = bleeding_wound(cut_state)
+    # Updates the cut_state
+
+    print("\nAs you step out to leave the elevator, you think back "
+          "to a shadowy figure running from the broken vase.")
+    print("You wonder who they might be, and where are they taking you.")
+    print("The stress of it all seems a bit too much to handle.")
+    print("Being at this place, you start to feel a nudge towards using "
+          "an escape pod.")
+    print("Do you: [a]give into the feeling and escape or [b] turn around"
+          " and go back to try and save everyone?")
+
+
 def escape_pods():
     """
     Handles the player's actions and choices when they arrive to the
@@ -221,6 +246,101 @@ def escape_pods():
     The user can choose to save themselves or use a lift and go back into
     Cargo Hold and continue to explore the rest of the ship.
     """
+    global cut_state, navigation_threat
+
+    global cut_state
+    if bleeding is False:
+        clear()
+
+    print("Only few seconds pass before the elevator stops.\n")
+    print("The doors swing open, and you find yourself in a state "
+          "of awe.")
+    print("As you look around, you notice a numerous escape pods, "
+          "each with its own unique design, waiting to be explored.\n"
+          "The soft, pulsating glow of their control panels and the "
+          "promise of safety within them beckon you closer.")
+
+    cut_state = bleeding_wound(cut_state)
+    # Updates the cut_state
+
+    if navigation_error is True:
+        print("\nYou can't help but remember the unsettling navigation error "
+              "and the looming threat of a critical system failure, which "
+              "hangs like a heavy cloud over your thoughts.")
+        print("The weight of responsibility presses on your shoulders.")
+        print("The stress of it all seems a bit too much to handle.")
+        print("Being at this place, you start to feel a nudge towards using "
+              "an escape pod.")
+    else:
+        print("\nYou can't help but think of all of the mysteries that are "
+              "surrounding the whole scenario since you woke up.")
+        print("The uncertainty of the whole situation looms over you as "
+              "a shadow.\n")
+
+    print("Do you: [a]give into the feeling and escape or [b] turn around"
+          " and go back to try and save everyone?")
+
+    while True:
+        escape_pod_option = input("\n> ")
+
+        if escape_pod_option == "end":
+            end_game()
+        if navigation_threat > 0:
+            navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
+
+        if escape_pod_option == "a" or escape_pod_option == "escape":
+            if navigation_error is True:
+                print("\nAs the weight of responsibility becomes too much to "
+                      "bear on your own, the overwhelming stress drives you to"
+                      " make the difficult decision to leave.")
+            print("\nWith a heavy heart and knowing that you are leaving "
+                  "behind the lives of your fellow travelers. You step "
+                  "into one of the escape pods.")
+            print("As the pod door seals shut, you look out the window,"
+                  " gazing one last time at the massive starship that "
+                  "had been your home.")
+            print("\nAt the push of a button your escape pod disengages "
+                  "and drifts away into the unknown depths of space, "
+                  "leaving behind the vessel and your companions.")
+            print("Tears start to stream down your face as you watch "
+                  "the distance between you and the ship grow, knowing "
+                  "the choice you just made and that you may never see "
+                  "them again.")
+            print("You're filled with a mix of relief and sorrow, haunted"
+                  " by the choice you have just made.")
+            if navigation_error is True:
+                print("\nThe road to Terra Novus is uncertain, but at least "
+                      "you managed to escape the impending doom.")
+            else:
+                print("\nThe road to Terra Novus is unknown, but at least "
+                      "you managed to escape the uncertainty.")
+            print("\nAs you speed through space, a shadowy figure is staring"
+                  " at your escape pod from the ship, their identity and "
+                  "intentions veiled in mystery, you get an unsettling "
+                  "sense of uncertainty and a feeling of dread that this"
+                  " is not completely over.\n")
+            print("...\n")
+            print("The End.")
+            print("\nThank you for playing")
+            quit()
+        elif escape_pod_option == "b" or escape_pod_option == "save":
+            print("\nAs you start thinking about the weight of the "
+                  "responsibility, you start doubting whether you can do "
+                  "this or not.")
+            print("You push your fears and doubts aside and start thinking"
+                  "about the numerous fellow travellers that are unaware"
+                  " of the predicament that we are in.")
+            print("You can't get yourself to leave them behind.")
+            print("You turn around and leave the escape pods section, "
+                  "your determination to help them and make a difference"
+                  " outweighs all your fears and uncertainties.")
+            print("You step into the elevator and head on upstairs, back "
+                  "into the Cargo Hold")
+        else:
+            print("Invalid input, your choices are [a]escape or [b]go back")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{escape_pod_option}"\n')
 
 
 def cargo_hold_path_choice():
@@ -285,6 +405,10 @@ def cargo_hold():
     Hold, or continue on exploring the ship.
     """
     global cut_state, navigation_threat
+
+    global cut_state
+    if bleeding is False:
+        clear()
 
     print("\nAs you continue your exploration, you eventually reach "
           "the massive Cargo Hold.\n")
@@ -509,6 +633,11 @@ def med_bay_choose_path():
     moving through the rest of the rooms left to explore.
     """
     global cut_state
+
+    global cut_state
+    if bleeding is False:
+        clear()
+
     print("You walk through the Med Bay exploring.")
     print("You pass around the Regenesis Chamber 3000 and "
           "reach two corridors.\n")
