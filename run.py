@@ -1,4 +1,7 @@
 import os
+from datetime import datetime
+import pytz
+import random
 
 
 def clear():
@@ -40,13 +43,27 @@ def start_game_message():
     print("Are you ready to open and leave your hibernation pod? [y/n]")
 
 
-fall_decision = None
+# Date and time
+# Gets and extracts current date and time for Dublin
+dublin_timezone = pytz.timezone('Europe/Dublin')
+dublin_date = datetime.now(dublin_timezone)
+day = dublin_date.day
+month = dublin_date.month
+time = dublin_date.strftime("%H:%M:%S")
+rand_number = random.randint(2, 100)
+year = 3076
+updated_end_year = year + rand_number
+
+update_end_date = (f"{day}" + "/" + f"{month}" + "/" + f"{updated_end_year}"
+                   + ", " + f"At time: {time}")
+
 cut_state = 0
 navigation_threat = 0
+reboot_code = 29137
+fall_decision = None
 navigation_error = False
 bleeding = False
 broken_vase = False
-reboot_code = 29137
 
 
 def bleeding_wound(cut_state):
@@ -229,30 +246,40 @@ def engineering_bay():
               "situation we find ourselves in.")
         print("The questions keep running through your head, but you can't"
               " stop now. You continue on.")
+    else:
+        print("You step into the Engineering Bay, excited to discover what "
+              "glorious treasures you might find.")
 
     print("\nYou enter the room and find yourself surrounded by a magnificent "
           "array of computers, intricate crafting stations, precision "
           "constructors, and deconstructors, each humming with purpose.")
-    print("You can imagine all of the tinkering that could be done in here.")
+    print("\nYou can imagine all of the tinkering that could be done in here.")
     print("You always loved to build machines that could better the life as "
           "we know today.")
-    print("Maybe that was the reason you were awoken.")
-    print("Would you like to explore the Engineering bay?[y]yes or [n]no")
+    print("Maybe that was the reason you were awoken.\n")
 
     while True:
-        explore_engineering_bay = input("\n> ")
+        explore_engineering_bay = input("\nWould you like to explore the "
+                                        "Engineering bay?[y]yes or [n]no.\n> ")
+        if explore_engineering_bay == "end":
+            end_game()
         if explore_engineering_bay == "y" or explore_engineering_bay == "yes":
             print("\nYou start exploring and walking around. You are as exited"
-                  " as a lettle kid in a chocolate factory.")
-            print("Which machine would you like to explore?\n"
-                  "[a] Approach the crafting station.\n"
-                  "[b] Examine the constructors and deconstructors.\n"
-                  "[c] Investigate the mysterious old computer in the corner "
-                  "of the room.\n"
-                  "[d] Decide to stop exploring and continue on your way.\n")
+                  " as a lettle kid in a chocolate factory.\n")
 
             while True:
-                explore_choice = input("\n> ")
+                explore_choice = input("Which machine would you like to "
+                                       "explore?\n"
+                                       "[a] Approach the crafting station.\n"
+                                       "[b] Examine the constructors and "
+                                       "deconstructors.\n"
+                                       "[c] Investigate the mysterious old "
+                                       "computer in the corner "
+                                       "of the room.\n"
+                                       "[d] Decide to stop exploring and "
+                                       "continue on your way.\n\n> ")
+                if explore_choice == "end":
+                    end_game()
                 if explore_choice == "a" or explore_choice == "crafting":
                     print("\nYou approach the crafting station and immediately"
                           " start looking through all of the blueprints for "
@@ -281,16 +308,80 @@ def engineering_bay():
                           " being attainable.")
                     print("After realizing you have spent a while going "
                           "through the blueprints, you decide to move on.")
-                          
-                elif (explore_choice == "b" or explore_choice == "contructors"
+
+                elif (explore_choice == "b" or explore_choice == "constructors"
                       or explore_choice == "deconstructors"):
-                    print("")
+                    print("\nYou find yourself irresistibly drawn to the "
+                          "constructors and deconstructors.\nThese "
+                          "sophisticated devices are marvels of engineering, "
+                          "capable of creating and disassembling objects down "
+                          "to their fundamental atomic components. ")
+                    print("As you approach, you can't help but marvel at the "
+                          "precision and complexity involved for such machines"
+                          "to function.")
+                    print("You are mesmerised with these machines that "
+                          "represent a power that only few can understand.")
+                    print("\nYou turn your attention to the constructor. As "
+                          "you play around with it, you see the magic of "
+                          "creation unfolding before your eyes.")
+                    print("You select a blueprint and start the process. "
+                          "You decided to start with a simple item, a mug.")
+                    print("Slowly, the machine assembles the raw materials "
+                          "from its storage and weaves them together, atom "
+                          "by atom, into a tangible, functional object.")
+                    print("It takes mere seconds for selected item to be "
+                          "completed. Given the amazing feat you just "
+                          "witnessed you have to test the possibilities "
+                          "the deconstructor has to offer.")
+                    print("You place your freshly constructed mug and place "
+                          "it inside of the deconstructor. You press the "
+                          "start button and it only takes a second or two "
+                          "for the item to dissapear into nothingness.")
+                    print("You are left at awe and you're thrilled by "
+                          "the thought of all the possibilities these "
+                          "machines hold both together and apart.")
+                    print("You can't help but think of all of the ways "
+                          "this ingenuity will help reshape your life on "
+                          "Terra Novus, and smile.")
+                    print("After hours spend tinkering with the machines"
+                          " you decide to continue on exploring.")
+
                 elif (explore_choice == "c" or explore_choice == "mystery"
                       or explore_choice == "computer"):
-                    print("")
+                    print("\nThe ancient computer sits silently in the corner,"
+                          " a stark contrast of a simple machine next to the"
+                          " gleaming technology that surrounds it.")
+                    print("Its bulk form, which you would expect to covered in"
+                          " a layer of dust and neglect, in a relic store, "
+                          "somewhere on Earth, as it tells a story of a "
+                          "completly different era.")
+                    print("It's an enigma in this otherwise cutting-edge "
+                          "environment, but you can't help but be intrigued "
+                          "by its presence in this room.")
+                    print("\nAs you come closer, you notice that the computer "
+                          "hasn't been interacted with for a very long time.")
+                    print("At the press of a single button the screen flickers"
+                          " to life.")
+                    print("The interface is ancient, a far cry from the "
+                          "holographic displays and advanced AI systems you "
+                          "have been interacting with your whole life.")
+                    ancient_computer_message = "Updating systems...".upper()
+                    print(ancient_computer_message)
+                    print("The system update will finish on: "
+                          f"{update_end_date}")
+                    print(f"The update will take: {rand_number} years")
+                    print("\nThat seems as a long time to wait for an "
+                          "update, you continue to explore further.")
                 elif (explore_choice == "d" or explore_choice == "stop"
                       or explore_choice == "continue"):
-                    print("")
+                    print("\nYou have decided to continue on with your "
+                          "adventure.")
+                    print("As you walk down the dimly lit corridor, you"
+                          " can't help but wonder what else hides on this "
+                          "spaceship in its mysterious depths.")
+                    print("You continue your journey with a sense of "
+                          "anticipation. What other secrets and surprises are"
+                          " waiting for you on this interstellar expedition?")
                 else:
                     print("Invalid input, your choices are [a/b/c/d]")
                     print('You can end the game by typing "end"')
@@ -485,14 +576,14 @@ def cargo_hold_path_choice():
         elif (cargo_hold_path_options == "b" or
               cargo_hold_path_options == "right"):
             print("You decide to follow to the Engineering Bay, hoping "
-                  "your mind is not playing tricks on you, or worse"
+                  "your mind is not playing tricks on you, or worse "
                   "you have started loosing your mind and are becoming"
                   " delirious.")
             print("You run as fast as your legs can carry you. But "
                   "can't seem to catch up.")
             engineering_bay()
         else:
-            print("Invalid input, your choices are [a/b/c/d]")
+            print("Invalid input, your choices are [a]left or [b]right")
             print('You can end the game by typing "end"')
             print(f'\nYou typed in "{cargo_hold_path_options}"\n')
 
@@ -603,13 +694,13 @@ def control_room_choose_path():
           "go right into the Engineering Bay [b]?")
 
     while True:
-        control_path_choice = input("Which path would you like to "
+        control_path_choice = input("\nWhich path would you like to "
                                     "take? [a/left or b/right] \n> ").lower()
         if control_path_choice == "end":
             end_game()
 
         if control_path_choice == "a" or control_path_choice == "left":
-            print("You head left towards the Cargo Hold.")
+            print("\nYou head left towards the Cargo Hold.")
             cargo_hold()
             cut_state = bleeding_wound(cut_state)
             # Updates the cut_state
@@ -617,14 +708,14 @@ def control_room_choose_path():
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
         elif control_path_choice == "b" or control_path_choice == "right":
-            print("You head right towards the Engineering Bay.")
-            print("Wondering what might you find there.")
-            engineering_bay()
+            print("\nYou head right towards the Engineering Bay. Wondering"
+                  " what might you find there.")
             cut_state = bleeding_wound(cut_state)
             # Updates the cut_state
             if navigation_threat > 0:
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
+            engineering_bay()
         else:
             print("Invalid input, you can go either [a]left or [b]right")
             print('You can end the game by typing "end"')
