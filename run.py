@@ -45,6 +45,7 @@ cut_state = 0
 navigation_threat = 0
 navigation_error = False
 bleeding = False
+broken_vase = False
 reboot_code = 29137
 
 
@@ -215,28 +216,121 @@ def engineering_bay():
     The user can choose to explore the Engineering Bay or continue
     on their way to explore the rest of the ship.
     """
-
-
-def cargo_hold_path_choice2():
-    """
-    Handles the player's actions and choices when they Come back from the
-    Escape Pods section.
-    The user can choose to leave the Control Room across the room towards
-    the Engineering Bay or to use a lift to go down into Escape Pods.
-    """
-    global cut_state, navigation_threat
+    global cut_state
 
     cut_state = bleeding_wound(cut_state)
     # Updates the cut_state
 
-    print("\nAs you step out to leave the elevator, you think back "
-          "to a shadowy figure running from the broken vase.")
-    print("You wonder who they might be, and where are they taking you.")
-    print("The stress of it all seems a bit too much to handle.")
-    print("Being at this place, you start to feel a nudge towards using "
-          "an escape pod.")
-    print("Do you: [a]give into the feeling and escape or [b] turn around"
-          " and go back to try and save everyone?")
+    if broken_vase is True:
+        print("\nAs you step into the Engineering Bay, you think back "
+              "to a shadowy figure running from the broken vase.")
+        print("You wonder who they might be, and where are they directing "
+              "you to, why don't they just aproach you, to help with this "
+              "situation we find ourselves in.")
+        print("The questions keep running through your head, but you can't"
+              " stop now. You continue on.")
+
+    print("\nYou enter the room and find yourself surrounded by a magnificent "
+          "array of computers, intricate crafting stations, precision "
+          "constructors, and deconstructors, each humming with purpose.")
+    print("You can imagine all of the tinkering that could be done in here.")
+    print("You always loved to build machines that could better the life as "
+          "we know today.")
+    print("Maybe that was the reason you were awoken.")
+    print("Would you like to explore the Engineering bay?[y]yes or [n]no")
+
+    while True:
+        explore_engineering_bay = input("\n> ")
+        if explore_engineering_bay == "y" or explore_engineering_bay == "yes":
+            print("\nYou start exploring and walking around. You are as exited"
+                  " as a lettle kid in a chocolate factory.")
+            print("Which machine would you like to explore?\n"
+                  "[a] Approach the crafting station.\n"
+                  "[b] Examine the constructors and deconstructors.\n"
+                  "[c] Investigate the mysterious old computer in the corner "
+                  "of the room.\n"
+                  "[d] Decide to stop exploring and continue on your way.\n")
+
+            while True:
+                explore_choice = input("\n> ")
+                if explore_choice == "a" or explore_choice == "crafting":
+                    print("\nYou approach the crafting station and immediately"
+                          " start looking through all of the blueprints for "
+                          "various machinery.")
+                    print("The blueprints reveal a world of possibilities, "
+                          "with a mix of cutting-edge designs crafted "
+                          "specifically for this mission and some foundational"
+                          " ones.")
+                    print("Some that stick out are various rovers and hovers, "
+                          "each equipped with innovative features. These "
+                          "vehicles seem perfect for exploring the unknown "
+                          "terrain of Terra Novus.")
+                    print("Additionally, you spot blueprints for an assortment"
+                          " of transport and theoretical teleportation devices"
+                          ", hinting at advanced methods for traveling great "
+                          "distances.")
+                    print("The accompanying notes explain that the "
+                          "construction of such a device depends on the "
+                          "availability of rare and specific minerals that can"
+                          " only be foundwithin the Terra Novus galactic "
+                          "system, minerals what are sadly not present on the "
+                          "spaceship.")
+                    print("Disappointment creeps in as you realize that "
+                          "instant teleportation, which would be an "
+                          "incredible asset on this journey, remains far from"
+                          " being attainable.")
+                    print("After realizing you have spent a while going "
+                          "through the blueprints, you decide to move on.")
+                          
+                elif (explore_choice == "b" or explore_choice == "contructors"
+                      or explore_choice == "deconstructors"):
+                    print("")
+                elif (explore_choice == "c" or explore_choice == "mystery"
+                      or explore_choice == "computer"):
+                    print("")
+                elif (explore_choice == "d" or explore_choice == "stop"
+                      or explore_choice == "continue"):
+                    print("")
+                else:
+                    print("Invalid input, your choices are [a/b/c/d]")
+                    print('You can end the game by typing "end"')
+                    print(f'\nYou typed in "{explore_choice}"\n')
+
+        elif explore_engineering_bay == "n" or explore_engineering_bay == "no":
+            print("")
+        else:
+            print("Invalid input, your choices are [y]yes or [n]no")
+            print('You can end the game by typing "end"')
+            print(f'\nYou typed in "{explore_engineering_bay}"\n')
+
+
+def escape_pods_lift_ending():
+    """
+    Handles another possible ending depending on the player's choices so far.
+    The game ends in the softer tone, leaving an opening for future additions
+    to the game.
+    The user can choose to leave the Control Room across the room towards
+    the Engineering Bay or to use a lift to go down into Escape Pods.
+    """
+    global cut_state
+
+    cut_state = bleeding_wound(cut_state)
+    # Updates the cut_state
+
+    print("\nAs the elevator starts to ascend to the Cargo Hold, it "
+          "suddenly halts and the metallic groans grow louder and more "
+          "unsettling, echoing within the confined space.")
+    print("The pit in your stomach doubles in size and you start to panic.")
+    print("You can feel your end is near, the cold shiver running down your "
+          "spine.")
+    print("The metallic groans intensify, reaching an ear-piercing screech, "
+          "just as the elevator takes a sudden alarming dive.")
+    print("\n You never should have decided to leave for this expedition.")
+    print("In the last seconds you wish to be back in your tiny apartment"
+          "safe in your bed, waking up from this nightmare, but...")
+    print("\nEverything goes dark, you loose consciousness and slip away "
+          "into nothingness.")
+    print("\nThe End.")
 
 
 def escape_pods():
@@ -337,6 +431,7 @@ def escape_pods():
                   " outweighs all your fears and uncertainties.")
             print("You step into the elevator and head on upstairs, back "
                   "into the Cargo Hold")
+            escape_pods_lift_ending()
         else:
             print("Invalid input, your choices are [a]escape or [b]go back")
             print('You can end the game by typing "end"')
@@ -350,7 +445,7 @@ def cargo_hold_path_choice():
     The user can choose to leave the Control Room across the room towards
     the Engineering Bay or to use a lift to go down into Escape Pods.
     """
-    global cut_state, navigation_threat
+    global cut_state, navigation_threat, broken_vase
 
     cut_state = bleeding_wound(cut_state)
     # Updates the cut_state
@@ -363,8 +458,11 @@ def cargo_hold_path_choice():
           "from you.")
     print("You decide to follow, but soon find yourself at the cross "
           "section. \nWhich way do you follow?"
-          "\n[a] left into the unmarked lift that takes you down a level"
+          "\n[a] left into the suspiciously old and unmarked lift that "
+          "takes you down a level"
           "\n[b] right into the Engineering Bay")
+
+    broken_vase = True
 
     while True:
         cargo_hold_path_options = input("\n> ")
@@ -378,7 +476,8 @@ def cargo_hold_path_choice():
         if (cargo_hold_path_options == "a" or
                 cargo_hold_path_options == "left"):
             print("\nYou step into the mysterious elevator, its metal doors "
-                  "slide shut as it whisks you away to a lower level.\n")
+                  "creak and slide shut as it whisks you away to a lower "
+                  "level.\n")
             print("Riding the elevator, you realise you don't know where "
                   "you are going, you start to doubt whether it was a "
                   "smart idea just to jump in like that...\n")
