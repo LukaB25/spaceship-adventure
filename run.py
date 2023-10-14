@@ -27,6 +27,40 @@ def start_game_message():
     Prints out the welcome message and some details to set the scene.
     Offers some insight in the game for the user.
     """
+    print("                                                                 \n"
+          "               ░░                     ░░                  ░░     \n"
+          "   ███ ███ ███ ███ ███ ┼┼ ███ ██▄ █▄█ ███ █┼┼█ ███ █┼█ ███ ███   \n"
+          "   █▄▄ █▄█ █▄█ █┼┼ █▄┼ ┼┼ █▄█ █┼█ ███ █▄┼ ██▄█ ┼█┼ █┼█ █▄┼ █▄┼   \n"
+          "   ▄▄█ █┼┼ █┼█ ███ █▄▄ ┼┼ █┼█ ███ ┼█┼ █▄▄ █┼██ ┼█┼ ███ █┼█ █▄▄   \n"
+          "          ░░           ░░                        ░░              \n"
+          "                 ░░                   ░░                         \n"
+          "      ░░                    ░░  ██        ░░                     \n"
+          "  ░░                            ██                    ░░░░       \n"
+          "                 ░░             ██                               \n"
+          "                              ▓▓▓▓▓▓                             \n"
+          "                            ▓▓▓▓▓▓▓▓▓▓                           \n"
+          "          ▒▒          ░░  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         \n"
+          "                          ▓▓▒▒▓▓▓▓▒▒▓▓▓▓         ▒▒              \n"
+          "                          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓     ░░                  \n"
+          "    ▒▒       ░░           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓                 ░░      \n"
+          "                          ░░░░▒▒░░░░░░░░                         \n"
+          "                          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ░░             \n"
+          "       ░░                 ▓▓▒▒▒▒▓▓▒▒▒▒▓▓   ▒▒                    \n"
+          "                  ░░      ▓▓▒▒▒▒██▒▒▒▒▓▓            ░░           \n"
+          "                        ████▓▓▓▓▓▓██▓▓▓▓██      ░░               \n"
+          "         ▒▒           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                     \n"
+          "                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                   \n"
+          "             ░░     ▓▓▓▓▓▓██▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓        ░░         \n"
+          "   ░░               ▓▓▓▓▓▓░░████████████░░████              ░░   \n"
+          "                    ▓▓    ▓▓░░░░░░▓▓░░░░    ▓▓   ░░              \n"
+          "                   ░░  ▒▒               ▒▓░░ ▒▒                  \n"
+          "                  ▒▒▓░▓▓▒▒             ░░ ▓▓▒▒                   \n"
+          "                   ░░▓▒▒                ▒▒▓▒░░                   \n"
+          "                    ▒ ▓░░               ░░▒▓▒                    \n"
+          "                     ░░                   ░░                     \n"
+          "            ▒▒                ▒▒    ▒▒          ▒▒    ▒▒        \n")
+    # The rocket was taken from https://textart.sh/topic/rocket
+    # The sign was created and taken from https://www.textartgenerator.net/
     print("Welcome to your spaceship adventure!")
     print('\nIf for any reason you decide to end the game, you can do so '
           'by writing "end" into any input field at any stage of the '
@@ -40,11 +74,12 @@ def start_game_message():
           "through the vast space in search of a better life.\n")
     print("You are suddenly awoken. You woke up before all other travellers, "
           "and you need to find out what is going on.")
-    print("Are you ready to open and leave your hibernation pod? [y/n]")
+    print("\nAre you ready to open and leave your hibernation pod? [y/n]")
 
 
 # Date and time
 # Gets and extracts current date and time for Dublin
+# Took part of code from Free Code Camp for the timezone
 dublin_timezone = pytz.timezone('Europe/Dublin')
 dublin_date = datetime.now(dublin_timezone)
 day = dublin_date.day
@@ -96,21 +131,20 @@ def fall_choice():
             end_game()
 
         if fall_decision == "a":
-            print("You managed to grab onto the pod door")
+            print("\nYou managed to grab onto the pod door")
             print("You regained your balance and start exploring. You are "
-                  "in the room containing hibernation pods.\n")
-            print("You see two paths, you can either go straight "
-                  "towards the ship Control Room, or to the right "
-                  "towards the Med Bay.")
+                  "in the room containing hibernation pods.")
+
             choose_path(fall_decision)
         elif fall_decision == "b":
-            print("You accidentally grabbed the electrical cord "
+            print("\nYou accidentally grabbed the electrical cord "
                   "and got electrocuted.")
             print("You died.")
+            print("")
             print("The End.")
             quit()
         elif fall_decision == "c":
-            print("You fell and cut your hand; you are bleeding.")
+            print("\nYou fell and cut your hand; you are bleeding.")
             print("You should find some bandages to cover the wound.")
 
             bleeding = True
@@ -118,9 +152,6 @@ def fall_choice():
             # Updates the cut_state
 
             print("You start exploring the room.\n")
-            print("You see two paths, you can either go "
-                  "straight towards the Control Room[a] "
-                  "or to the right towards the Med Bay.[b]")
 
             choose_path(fall_decision)
         else:
@@ -470,11 +501,12 @@ def escape_pods():
 
         if escape_pod_option == "end":
             end_game()
-        if navigation_threat > 0:
-            navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
 
         if escape_pod_option == "a" or escape_pod_option == "escape":
+
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
             if navigation_error is True:
                 print("\nAs the weight of responsibility becomes too much to "
                       "bear on your own, the overwhelming stress drives you to"
@@ -510,6 +542,9 @@ def escape_pods():
             print("\nThank you for playing")
             quit()
         elif escape_pod_option == "b" or escape_pod_option == "save":
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
             print("\nAs you start thinking about the weight of the "
                   "responsibility, you start doubting whether you can do "
                   "this or not.")
@@ -548,21 +583,19 @@ def cargo_hold_path_choice():
           " have fallen on it's own. \nYou see a shadow running away "
           "from you.")
     print("You decide to follow, but soon find yourself at the cross "
-          "section. \nWhich way do you follow?"
-          "\n[a] left into the suspiciously old and unmarked lift that "
-          "takes you down a level"
-          "\n[b] right into the Engineering Bay")
+          "section.")
 
     broken_vase = True
 
     while True:
-        cargo_hold_path_options = input("\n> ")
+        print("\nWhich way do you follow?"
+              "\n[a] left into the suspiciously old and unmarked lift that "
+              "takes you down a level"
+              "\n[b] right into the Engineering Bay")
+        cargo_hold_path_options = input("n> ").lower()
 
         if cargo_hold_path_options == "end":
             end_game()
-        if navigation_threat > 0:
-            navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
 
         if (cargo_hold_path_options == "a" or
                 cargo_hold_path_options == "left"):
@@ -572,6 +605,9 @@ def cargo_hold_path_choice():
             print("Riding the elevator, you realise you don't know where "
                   "you are going, you start to doubt whether it was a "
                   "smart idea just to jump in like that...\n")
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
             escape_pods()
         elif (cargo_hold_path_options == "b" or
               cargo_hold_path_options == "right"):
@@ -579,6 +615,9 @@ def cargo_hold_path_choice():
                   "your mind is not playing tricks on you, or worse "
                   "you have started loosing your mind and are becoming"
                   " delirious.")
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
             print("You run as fast as your legs can carry you. But "
                   "can't seem to catch up.")
             engineering_bay()
@@ -611,54 +650,60 @@ def cargo_hold():
     # Updates the cut_state
 
     while True:
-        cargo_hold_options = input("Which part of the Cargo Hold "
+        cargo_hold_options = input("\nWhich part of the Cargo Hold "
                                    "would you like to explore?\n"
                                    "[a] boxes and supplies\n"
                                    "[b] vehicles\n"
                                    "[c] specimens\n"
-                                   "[d] continue on/ don't explore\n> ")
+                                   "[d] continue on/ don't explore"
+                                   "\n> ").lower()
 
         if cargo_hold_options == "end":
             end_game()
 
-        if navigation_threat > 0:
-            navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
-        if cargo_hold_options == "a" or cargo_hold_options == "box":
+        if cargo_hold_options == "a" or cargo_hold_options == "boxes":
             print("\nYou start reading the signs on all of the boxes "
                   "and containers")
             print("You have been searching through boxes for hours...")
             print("You have discovered various Ancient Relics, Rare Minerals, "
                   "advanced holo communicators...")
-            print("After spending another hour of searching you reached a "
+            print("After after a while you reached a "
                   "heavily armoured cage containing various advanced "
                   "weaponry and ammunition, mining and building "
-                  "tools...\n")
+                  "tools, it is locked.")
             print("You decide to stop exploring the supply boxes "
-                  "and containers")
+                  "and containers and continue on...")
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
+
         elif (cargo_hold_options == "b" or
                 cargo_hold_options == "vehicles"):
             print("\nYou continue walking among all of the advanced "
                   "and antique vehicles and machinery.")
             print("You are awed by the vast array before your sight.")
-            print("There are numerous hover crafts, flying saucers, "
+            print("\nThere are numerous hover crafts, flying saucers, "
                   "antique cars, excavators, diggers, but also "
                   "the all mighty Structure Synthesizers and "
-                  "Instant Fabricators")
+                  "Instant Fabricators.")
             print("You remember the first time you saw Structure "
                   "Synthesizer at work. It managed to construct "
                   "the whole ten story building in a matter of "
-                  "seconds.")
+                  "seconds.\n")
             print("After hours of exploring you decide to stop "
                   "exploring the vehicles that The Collective "
-                  "Government supplied us with.")
+                  "Government supplied us with and continue on...")
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
+
         elif (cargo_hold_options == "c" or
                 cargo_hold_options == "specimens"):
             print("You choose to examine the collection of live "
                   "animal specimens that were sent with us on this "
                   "journey to Terra Novus.")
             print("You find yourself at a loss for words, completely "
-                  "captivated by the magnificent sight.")
+                  "captivated by the magnificent sight.\n")
             print("All the specimens lay within specialized cryo-hibernation "
                   "chambers, in a peaceful slumber awaiting our arrival to "
                   "the new world, our new home.")
@@ -668,15 +713,23 @@ def cargo_hold():
                   "managed to create just for this expedition all intended "
                   "to populate our new world.")
             print("You could continue exploring the animal specimens for "
-                  "days, but you know it is time to continue with your "
-                  "exploration of the ship.")
+                  "days, but you know it is time to continue on...")
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
+
         elif (cargo_hold_options == "d" or
                 cargo_hold_options == "continue"):
             print("You made a decision to continue exploring the ship.")
             print("Who knows what you might find next...")
+            if navigation_threat > 0:
+                navigation_threat = navigation_failure(navigation_threat)
+            # Updates the navigation_threat
             cargo_hold_path_choice()
+
         else:
-            print("Invalid input, your choices are [a/b/c/d]")
+            print("Invalid input, your choices are [a]boxes, [b]vehicles, "
+                  "[c]specimens or [d]continue")
             print('You can end the game by typing "end"')
             print(f'\nYou typed in "{cargo_hold_options}"\n')
 
@@ -695,7 +748,7 @@ def control_room_choose_path():
 
     while True:
         control_path_choice = input("\nWhich path would you like to "
-                                    "take? [a/left or b/right] \n> ").lower()
+                                    "take? [a]left or [b]right \n> ").lower()
         if control_path_choice == "end":
             end_game()
 
@@ -707,6 +760,7 @@ def control_room_choose_path():
             if navigation_threat > 0:
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
+
         elif control_path_choice == "b" or control_path_choice == "right":
             print("\nYou head right towards the Engineering Bay. Wondering"
                   " what might you find there.")
@@ -716,6 +770,7 @@ def control_room_choose_path():
                 navigation_threat = navigation_failure(navigation_threat)
                 # Updates the navigation_threat
             engineering_bay()
+
         else:
             print("Invalid input, you can go either [a]left or [b]right")
             print('You can end the game by typing "end"')
@@ -742,11 +797,10 @@ def control_room():
     print("\nYou reach the Control Room.")
     print("You are fascinated by all of the screens "
           "and blinking lights in this room.")
-    print("You can explore the screens "
-          "or continue on?\n")
 
     while True:
-        control_room_options = input("Do you [a/explore or b/continue]? "
+        control_room_options = input("Do you [a]explore the screens "
+                                     "or [b]continue on? "
                                      "\n> ").lower()
 
         if control_room_options == "end":
@@ -761,14 +815,17 @@ def control_room():
                   "reboot necessary to recalibrate system.\n").upper())
             print("...you must find the airlock, leave the spaceship and "
                   "manually reboot the system from the outside.")
-            print(f"System reboot code: {reboot_code}")
+            reboot_message = f"\nSystem reboot code: {reboot_code}".upper()
+            print(reboot_message + "\nMemorise this code. It is important!")
             navigation_threat = navigation_failure(navigation_threat)
             break
             # Updates the navigation_threat
+
         elif control_room_options == "continue" or control_room_options == "b":
             print("You decide to ignore all of the screens and "
                   "continue on your way to explore the ship.")
             break
+
         else:
             print("Incorrect input, please choose [a]explore or [b]continue")
             print('You can end the game by typing "end"')
@@ -785,11 +842,12 @@ def healing_procedure():
     """
     global bleeding
 
-    print("Scanning the wound.")
-    print("Decontamination")
-    print("Tissue Regeneration")
-    print("Cellular Rejuvenation")
-    print("Completion")
+    print("\nScanning the wound...\n")
+    print("Decontamination...\n")
+    print("Tissue Regeneration...\n")
+    print("Cellular Rejuvenation...\n")
+    print("Healing complete\n".upper())
+    print("Specimen returned to optimum health.\n")
     bleeding = False
 
 
@@ -824,26 +882,27 @@ def med_bay_choose_path():
     """
     global cut_state
 
-    global cut_state
-    if bleeding is False:
-        clear()
-
     print("You walk through the Med Bay exploring.")
     print("You pass around the Regenesis Chamber 3000 and "
           "reach two corridors.\n")
-    print("To your left you can see the long winding corridor "
-          "that will take you to the Observation Deck[a]")
-    print("To your right you have a straight path into the Library[b]\n")
 
     cut_state = bleeding_wound(cut_state)
+
     # Updates the cut_state
 
     while True:
+        print("To your left you can see the long winding corridor "
+              "that will take you to the Observation Deck[a]")
+        print("To your right you have a straight path into the Library[b]\n")
+
         med_bay_path_choice = input("What would you like to explore? "
                                     "[a/left or b/right] \n> ").lower()
 
         if med_bay_path_choice == "end":
             end_game()
+
+        if bleeding is False:
+            clear()
 
         if med_bay_path_choice == "a" or med_bay_path_choice == "left":
             print("\nYou take the long winding corridor towards the "
@@ -853,12 +912,31 @@ def med_bay_choose_path():
             print("The room is an enormous, circular cascading staircase, "
                   "offering a panoramic view of a brilliant tapestry of stars"
                   " and planets gracing throught the glass wall.\n")
+            print("⨯ . ⁺ ✦ ⊹ ꙳ ⁺ * ꙳ ✦ ✦ ⊹ . * ꙳ ✦ ⊹ ⨯ .  ☁︎ ⭑ ⛧ ꙳ ⭒ ☪︎ ⭒ ⁺ ✦ "
+                  "⊹ ꙳ ⁺ ‧ ⨯. ⁺ ✦ ⊹ . * ꙳ ✦ ⊹⊹ ꙳ ⁺ ‧ ⨯")
+            print("☆࿐ཽ༵༆༒ ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・"
+                  "☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆°☆ ༒༆࿐ཽ༵☆")
+            print("🪐　* .🌒  ⛧ .　 ˚　. ⭑ ⛧ . ＊ 🌍   ⭑ ⁎ ⭑ ⛧ .🌒　˚　　 . ✦ ⛧ ꙳ ⭒ "
+                  "　˚　　. 🪐  ⛧ ＊ ⛧ ꙳ ☪︎　˚　.🌍 . ✦")
+            print("⋆ 。゜⁎ ⭑ ⛧ ꙳ ⭒ ☁︎ 。⋆ 。゜☾゜。⋆⋆ ⋆⁺₊⋆  ☪︎ ⭒ ꙳ ⛧ ＊ ⭑ ⁎ ☀︎ ⋆⁺₊⋆"
+                  " ⋆⋆ 。゜☁︎ ⭑ ⛧ ꙳ ⭒ ☪︎ ⭒  。⋆ 。゜☾")
+            print("゜。⋆ ꙳ 🌍 ⛧ .　 ˚　. ✦　˚　⭑ ⛧ . ＊ ⭑ ⁎ ⭑ ⛧ ꙳ ⭒ 　˚　　.🪐　* ."
+                  " 　˚˚　　. 　˚　　.　*　. ⭑ ⛧ ✦")
+            print("☪︎ ⭒ ꙳ ⛧ ＊ ⭑ ⁎ ⭑ ⛧ ꙳ ⭒ ☪︎ ⭒ ꙳ ⛧ ＊ ⭑ ⁎ ⭑ ⛧ ꙳ ⭒ ☪︎ ⭒ ꙳ ⛧ ＊ "
+                  "⭑ ⁎ ⭑ ⛧ ꙳ ⭒ ☪︎ ⭒ ꙳ ⛧ ＊ ⛧ ꙳ ☪︎ ⭒ ꙳ ⛧ ＊")
+            print("˚ 　. ✦˚　 .　 ˚　. ✦　　˚　.🌒　˚　　 . ✦ 　.   　˚　 　*　🌍　 "
+                  "　✦　　.　 .　　  . 　˚　  ."" ")
+            print("⨯ . ⁺ ✦ ⊹ ꙳ ⁺ * ꙳ ✦ ✦ ⊹ . * ꙳ ✦ ⊹ ⨯ .  ☁︎ ⭑ ⛧ ꙳ ⭒ ☪︎ ⭒ ⁺ ✦ "
+                  "⊹ ꙳ ⁺ ‧ ⨯. ⁺ ✦ ⊹ . * ꙳ ✦ ⊹⊹ ꙳ ⁺ ‧ ⨯")
+            # Symbols and stars taken from https://text-art.top/
+
             print("You sit down, taking in the view, feeling humbled and small"
                   " in the vastness of the universe that surrounds you.")
             print("You feel at home. As if you were meant to be there.\n")
             print("Time stretches on, but you decide it is time to continue "
                   "your exploration. \nYou silently promise yourself to return"
                   " to this place.")
+
         elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
             print("\nYou decide to head through the small straight corridor"
                   " to your right")
@@ -874,11 +952,18 @@ def med_bay_choose_path():
             print("You approach it, looking arround you, trying to see if "
                   "there is someone else there, someone else that is awake "
                   "same as you are.\n")
+
             shout = ("Hello, is there anybody here??").upper()
             print(f"You shout: {shout}. \n But nobody answers. "
                   "\nYou are left intrigued. \nWho left that book?!\n")
-            print("You explore the room further, but decide it is time to "
+            print("You explore the room further, but you don't find the owner "
+                  "of the open book...")
+            print("You spent some time looking and reading through some books."
+                  "\nAs the time starts dragging on you decide it is time to "
                   "continue with your exploration of the ship.")
+            print("You turn around and go back into the Medical Bay.")
+            print("You find yourself at the same cross section.")
+
         else:
             print("\n Invalid input. Please choose [a]left or [b]right")
             print('You can end the game by typing "end"')
@@ -906,13 +991,13 @@ def med_bay():
 
     print("Amongst the sea of medical supplies, you notice a "
           "machine in the middle of the room. You approach it.")
-    print("\nRegenesis Chamber 3000. Sounds so majestic.\n")
+    print("\nRegenesis Chamber 3000. It still sounds so majestic.\n")
     print("You remember all of the advertising the collective "
           "government made, trying to sell them for at "
           "home use back in the day.\n")
     while True:
         healing_chamber = input("Would you like to test your health? "
-                                "[y/n] \n> ")
+                                "[y/n] \n> ").lower()
 
         if healing_chamber == "end":
             end_game()
@@ -923,29 +1008,30 @@ def med_bay():
             if bleeding:
                 print("Anomaly detected.")
                 print("Wound detected on the left forearm.")
-                heal_wound = input("Would you like to heal the wound? "
+                heal_wound = input("\nWould you like to heal the wound? "
                                    "[y/n] \n> ").lower()
 
                 if heal_wound == "y" or heal_wound == "yes":
                     healing_procedure()
+
                 elif heal_wound == "n" or heal_wound == "no":
                     forceful_healing_procedure()
-                elif heal_wound == "end":
-                    print("Thank you for playing, ending game at user "
-                          "request.")
-                    print("Game Ended!")
-                    quit()
-                print("Thank you for using Regenesis Chamber 3000")
+
+                if healing_chamber == "end":
+                    end_game()
+
             else:
                 print("No anomalies detected.")
                 print("\nYou are a healthy specimen.\n")
             print("Thank you for using Regenesis Chamber 3000\n")
             med_bay_choose_path()
+
         elif healing_chamber == "n" or healing_chamber == "no":
             med_bay_choose_path()
             if cut_state > 0:
                 cut_state = bleeding_wound(cut_state)
                 # Updates the cut_state
+
         else:
             print("\nInvalid input. Please choose either yes/y or no/n")
             print('You can end the game by typing "end"')
@@ -960,6 +1046,10 @@ def choose_path(fall_decision):
     to do in the beginning of the game.
     """
 
+    print("You see two paths, you can either go "
+          "straight towards the Control Room[a] "
+          "or to the right towards the Med Bay.[b]\n")
+
     while True:
         path_choice = input("Which path would you like to "
                             "take? [a/straight or b/right] \n> ").lower()
@@ -972,21 +1062,28 @@ def choose_path(fall_decision):
             print("You head straight towards the Control Room.")
             print("Eager to continue exploring.\n")
             control_room()
+
         elif (path_choice == "a" or path_choice == "straight"
               and fall_decision == "c"):
+            clear()
             print("You head straight towards the Control Room.\n")
             control_room()
+
         elif (path_choice == "b" or path_choice == "right"
               and fall_decision == "a"):
+            clear()
             print("You head right towards the Med Bay.")
             print("Eager to continue exploring.")
             med_bay()
+
         elif (path_choice == "b" or path_choice == "right"
               and fall_decision == "c"):
+            clear()
             print("You head right towards the Med Bay.")
             print("Where hopefully you will find "
                   "the bandages needed to stop the bleeding.\n")
             med_bay()
+
         else:
             print("Invalid input. Please choose [a]straight or [b]right")
             print('You can end the game by typing "end"')
