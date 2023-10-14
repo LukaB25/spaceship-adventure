@@ -1,7 +1,32 @@
 import os
-from datetime import datetime
-import pytz
-import random
+from datetime import datetime  # Import for date and time
+import pytz                    # Import for timezones
+import random                  # Import for randomness
+
+# Date and time
+# Gets and extracts current date and time for Dublin
+# Took part of code from Free Code Camp for the timezone
+dublin_timezone = pytz.timezone('Europe/Dublin')
+dublin_date = datetime.now(dublin_timezone)
+day = dublin_date.day
+month = dublin_date.month
+time = dublin_date.strftime("%H:%M:%S")
+rand_number = random.randint(2, 100)
+year = 3076
+updated_end_year = year + rand_number
+
+update_end_date = (f"{day}" + "/" + f"{month}" + "/" + f"{updated_end_year}"
+                   + ", " + f"At time: {time}")
+
+reboot_code = 29137
+max_reboot_attempts = 3
+cut_state = 0
+nav_threat = 0
+fall_decision = None
+navigation_error = False
+bleeding = False
+broken_vase = False
+space_suit = False
 
 
 def clear():
@@ -15,11 +40,53 @@ def clear():
 
 def end_game():
     """
-    Ends the game at the user's request.
+    Ends the game as part of user's choices to restart teh game or not.
     """
-    print("\nThank you for playing, ending the game at the user's request.")
-    print("Game Ended!\n")
+    print("Thank you for playing.")
+    print("Good Luck on your future voyage.")
+    print("The End!\n")
     quit()
+
+
+def reset_initial_values():
+    """
+    Resets all of the values to the initial state to prepare for the complete
+    restart of the game, so user can start from the beginning.
+    """
+    global cut_state, nav_threat, fall_decision, navigation_error
+    global bleeding, broken_vase, space_suit
+    cut_state = 0
+    nav_threat = 0
+    fall_decision = None
+    navigation_error = False
+    bleeding = False
+    broken_vase = False
+    space_suit = False
+
+
+def restart_game():
+    """
+    Restarts the game and starts from the beginning.
+    Resets the values, clears the screen and runs the main() function.
+    """
+    reset_initial_values()
+    clear()
+    main()
+
+
+def restart_game_choice():
+    """
+    Gives user a choice to either restart the game or to end the game.
+    Restarts the game and starts from the beginning.
+    """
+    restart_choice = input("\nDo you want to restart the game? \n[y]yes "
+                           "\n[n]no \n> ").lower()
+    if restart_choice == "y" or restart_choice == "yes":
+        print("\nRestarting game...\n")
+        restart_game()
+    elif restart_choice == "n" or restart_choice == "no":
+        print("\nEnding the game...")
+        end_game()
 
 
 def start_game_message():
@@ -76,32 +143,6 @@ def start_game_message():
           "and you need to find out what is going on.")
 
 
-# Date and time
-# Gets and extracts current date and time for Dublin
-# Took part of code from Free Code Camp for the timezone
-dublin_timezone = pytz.timezone('Europe/Dublin')
-dublin_date = datetime.now(dublin_timezone)
-day = dublin_date.day
-month = dublin_date.month
-time = dublin_date.strftime("%H:%M:%S")
-rand_number = random.randint(2, 100)
-year = 3076
-updated_end_year = year + rand_number
-
-update_end_date = (f"{day}" + "/" + f"{month}" + "/" + f"{updated_end_year}"
-                   + ", " + f"At time: {time}")
-
-cut_state = 0
-nav_threat = 0
-reboot_code = 29137
-max_reboot_attempts = 3
-fall_decision = None
-navigation_error = False
-bleeding = False
-broken_vase = False
-space_suit = False
-
-
 def bleeding_wound(cut_state):
     """
     Handles user choice to fall and deals damage until user either finds
@@ -119,7 +160,7 @@ def bleeding_wound(cut_state):
                   "You didn't reach Med Bay.")
             print("You died.\n")
             bleeding = False
-            quit()
+            restart_game_choice()
     return cut_state
 
 
@@ -132,7 +173,7 @@ def fall_choice():
                               "[c] risk injury from the fall \n> ").lower()
 
         if fall_decision == "end":
-            end_game()
+            restart_game_choice()
 
         if fall_decision == "a":
             print("\nYou managed to grab onto the pod door")
@@ -145,7 +186,7 @@ def fall_choice():
                   "and got electrocuted.")
             print("You died.")
             print("The End.")
-            quit()
+            restart_game_choice()
         elif fall_decision == "c":
             print("\nYou fell and cut your hand; you are bleeding.")
             print("You should find some bandages to cover the wound.")
@@ -170,12 +211,11 @@ def open_hibernation_pod():
     Sets up the decision on how to progress through the game.
     """
     while True:
-        print("\nAre you ready to open and leave your hibernation pod? "
-              "\n[y]yes \n[n]no")
-
-        pod_choice = input("> ").lower()
+        pod_choice = input("\nAre you ready to open and leave your "
+                           "hibernation pod? \n[y]yes "
+                           "\n[n]no\n> ").lower()
         if pod_choice == "end":
-            end_game()
+            restart_game_choice()
         if pod_choice == "yes" or pod_choice == "y":
             print("\nWith a little bit of struggle, the pod creaks open.")
             print("You step out but your legs falter, you start falling.\n")
@@ -191,22 +231,6 @@ def open_hibernation_pod():
             print("\nInvalid input. Please choose either yes/y or no/n")
             print('You can end the game by typing "end"')
             print(f'\nYou typed in "{pod_choice}"\n')
-
-
-# def restart_game_choice():
-#     global fall_decision  # Updates the global fall_decision
-#     global cut_state    # Updates the global cut_state
-#     restart_choice = input("Do you want to restart the game? [y/n] \n> ")
-#     if restart_choice == "y" or restart_choice == "yes":
-#         print("\nRestarting game!\n")
-#         fall_decision = None
-#         cut_state = 0
-#         start_game_message()
-#         open_hibernation_pod()
-#     elif restart_choice == "n" or restart_choice == "no":
-#         print("Thank you for playing!")
-#         print("Closing the game")
-#         quit()
 
 
 def navigation_failure(nav_threat):
@@ -245,7 +269,7 @@ def navigation_failure(nav_threat):
         print("\nThe spaceship perished.")
         print("You died.")
         print("The End.")
-        quit()
+        restart_game_choice()
     navigation_error = True
     return nav_threat
 
@@ -256,6 +280,22 @@ def the_end_message():
     Offers an open ending with a possibility of expanding the game or
     creating a sequel in the future.
     """
+    print("As you contemplate the vastness of space and your uncertain journey"
+          ", you realize that every choice you made has consequences. The fate"
+          " of the mission and its crew now rests in your hands.")
+    print("You've overcome adversity, saved the mission from disaster, and "
+          "made tough decisions. But the mysteries of space remain, and your "
+          "story is far from over.")
+    print("The ship, now set on an unknown path, drifts through the cosmos. "
+          "The future is still uncertain, but one thing is clear: your "
+          "journey has only just begun.")
+    print("Thank you for playing this adventure. The possibilities are "
+          "endless, and the story can continue in many directions. Will you "
+          "wander deeper into space, face more challenges, or perhaps return"
+          " to your home planet? The choice is yours to make in the next "
+          "chapter.")
+    print("Stay tuned for future possible updates and sequels to this "
+          "thrilling journey through the unknown.")
 
 
 def outer_space():
@@ -449,11 +489,11 @@ def engineering_bay():
 
         engineering_bay_path_options = input("Do you:\n[a]stay and explore the"
                                              " Engineering Bay further"
-                                             "[b]leave to explore the Airlock"
-                                             "\n> ").lower()
+                                             "\n[b]leave to explore the "
+                                             "Airlock\n> ").lower()
 
         if engineering_bay_path_options == "end":
-            end_game()
+            restart_game_choice()
 
         if (engineering_bay_path_options == "a" or
                 engineering_bay_path_options == "stay"):
@@ -515,11 +555,11 @@ def engineering_bay():
                   "you're now in a different section of the facility. The door"
                   " behind hisses closed, sealing you in the room.")
 
-            space_suit_choice = input("Would you like to put the space suit "
+            space_suit_choice = input("\nWould you like to put the space suit "
                                       "on?\n[y]yes \n[n]no")
 
             if space_suit_choice == "end":
-                end_game()
+                restart_game_choice()
 
             if space_suit_choice == "y" or space_suit_choice == "yes":
                 print("\nYou put on the space suit and get ready to walk "
@@ -581,13 +621,13 @@ def engineering_bay():
         explore_engineering_bay = input("\nWould you like to explore the "
                                         "Engineering bay?\n[y]yes\n[n]no.\n> ")
         if explore_engineering_bay == "end":
-            end_game()
+            restart_game_choice()
         if explore_engineering_bay == "y" or explore_engineering_bay == "yes":
             print("\nYou start exploring and walking around. You are as exited"
-                  " as a lettle kid in a chocolate factory.\n")
+                  " as a lettle kid in a chocolate factory.")
 
             while True:
-                explore_choice = input("Which machine would you like to "
+                explore_choice = input("\nWhich machine would you like to "
                                        "explore?\n"
                                        "[a] Approach the crafting station.\n"
                                        "[b] Examine the constructors and "
@@ -598,7 +638,7 @@ def engineering_bay():
                                        "[d] Decide to stop exploring and "
                                        "continue on your way.\n\n> ")
                 if explore_choice == "end":
-                    end_game()
+                    restart_game_choice()
 
                 if nav_threat > 0:
                     nav_threat = navigation_failure(nav_threat)
@@ -800,14 +840,13 @@ def escape_pods():
         print("The uncertainty of the whole situation looms over you as "
               "a shadow.\n")
 
-    print("Do you: [a]give into the feeling and escape or [b] turn around"
-          " and go back to try and save everyone?")
-
     while True:
-        escape_pod_option = input("\n> ")
+        escape_pod_option = input("Do you: \n[a]give into the feeling and "
+                                  "escape \n[b] turn around and go back to"
+                                  " try and save everyone?\n> ")
 
         if escape_pod_option == "end":
-            end_game()
+            restart_game_choice()
 
         if escape_pod_option == "a" or escape_pod_option == "escape":
 
@@ -847,7 +886,7 @@ def escape_pods():
             print("...\n")
             print("The End.")
             print("\nThank you for playing")
-            quit()
+            restart_game_choice()
         elif escape_pod_option == "b" or escape_pod_option == "save":
             if nav_threat > 0:
                 nav_threat = navigation_failure(nav_threat)
@@ -895,14 +934,14 @@ def cargo_hold_path_choice():
     broken_vase = True
 
     while True:
-        print("\nWhich way do you follow?"
-              "\n[a] left into the suspiciously old and unmarked lift that "
-              "takes you down a level"
-              "\n[b] right into the Engineering Bay")
-        cargo_hold_path_options = input("\n> ").lower()
+        cargo_hold_path_options = input("\nWhich way do you follow? \n[a] left"
+                                        " into the suspiciously old and "
+                                        "unmarked lift that takes you down a "
+                                        "level\n[b] right into the Engineering"
+                                        " Bay\n> ").lower()
 
         if cargo_hold_path_options == "end":
-            end_game()
+            restart_game_choice()
 
         if (cargo_hold_path_options == "a" or
                 cargo_hold_path_options == "left"):
@@ -966,7 +1005,7 @@ def cargo_hold():
                                    "\n> ").lower()
 
         if cargo_hold_options == "end":
-            end_game()
+            restart_game_choice()
 
         if cargo_hold_options == "a" or cargo_hold_options == "boxes":
             print("\nYou start reading the signs on all of the boxes "
@@ -1049,15 +1088,15 @@ def control_room_choose_path():
     to choose which way they would like to continue going.
     """
     global cut_state, nav_threat
-    print("You find yourself at the cross section. Your options are: \n"
-          "Go left into the Cargo Hold [a] or "
-          "go right into the Engineering Bay [b]?")
+    print("You find yourself at the cross section.")
 
     while True:
-        control_path_choice = input("\nWhich path would you like to "
-                                    "take? [a]left or [b]right \n> ").lower()
+        control_path_choice = input("\nYour options are: \n[a]Go left "
+                                    "into the Cargo Hold \n[b]Go right "
+                                    "into the Engineering Bay? "
+                                    "\n> ").lower()
         if control_path_choice == "end":
-            end_game()
+            restart_game_choice()
 
         if control_path_choice == "a" or control_path_choice == "left":
             print("\nYou head left towards the Cargo Hold.")
@@ -1106,12 +1145,12 @@ def control_room():
           "and blinking lights in this room.")
 
     while True:
-        control_room_options = input("Do you [a]explore the screens "
-                                     "or [b]continue on? "
+        control_room_options = input("Do you \n[a]explore the screens "
+                                     "\n[b]continue on? "
                                      "\n> ").lower()
 
         if control_room_options == "end":
-            end_game()
+            restart_game_choice()
 
         if control_room_options == "explore" or control_room_options == "a":
             print("\nYou look at all of the screens. You reach one "
@@ -1178,7 +1217,7 @@ def forceful_healing_procedure():
     print("You have received a deadly dose of serum.")
     print("You died.")
     print("The End")
-    quit()
+    restart_game_choice()
 
 
 def med_bay_choose_path():
@@ -1203,10 +1242,10 @@ def med_bay_choose_path():
         print("To your right you have a straight path into the Library[b]\n")
 
         med_bay_path_choice = input("What would you like to explore? "
-                                    "[a/left or b/right] \n> ").lower()
+                                    "\n[a]left \n[b]right \n> ").lower()
 
         if med_bay_path_choice == "end":
-            end_game()
+            restart_game_choice()
 
         if bleeding is False:
             clear()
@@ -1243,13 +1282,13 @@ def med_bay_choose_path():
             print("Time stretches on, but you decide it is time to continue "
                   "your exploration. \nYou silently promise yourself to return"
                   " to this place.")
-            observation_deck_option = input("\nWould you like to continue on "
-                                            "into the Engineering Bay [a] or "
-                                            "go back into the Med Bay [b]?"
-                                            "\n> ")
+            observation_deck_option = input("\nWould you like to: \n[a]"
+                                            "continue on into the Engineering"
+                                            " Bay  \n[b]go back into the Med "
+                                            "Bay?\n> ")
 
             if observation_deck_option == "end":
-                end_game()
+                restart_game_choice()
 
             if (observation_deck_option == "a" or
                     observation_deck_option == "Engineering Bay"):
@@ -1322,10 +1361,10 @@ def med_bay():
           "home use back in the day.\n")
     while True:
         healing_chamber = input("Would you like to test your health? "
-                                "[y/n] \n> ").lower()
+                                "\n[y]yes \n[n]no \n> ").lower()
 
         if healing_chamber == "end":
-            end_game()
+            restart_game_choice()
 
         if healing_chamber == "y" or healing_chamber == "yes":
             print("\nScanning...\n")
@@ -1334,7 +1373,7 @@ def med_bay():
                 print("Anomaly detected.")
                 print("Wound detected on the left forearm.")
                 heal_wound = input("\nWould you like to heal the wound? "
-                                   "[y/n] \n> ").lower()
+                                   "\n[y]yes \n[n]no \n> ").lower()
 
                 if heal_wound == "y" or heal_wound == "yes":
                     healing_procedure()
@@ -1343,7 +1382,7 @@ def med_bay():
                     forceful_healing_procedure()
 
                 if healing_chamber == "end":
-                    end_game()
+                    restart_game_choice()
 
             else:
                 print("No anomalies detected.")
@@ -1377,10 +1416,10 @@ def choose_path(fall_decision):
 
     while True:
         path_choice = input("Which path would you like to "
-                            "take? [a/straight or b/right] \n> ").lower()
+                            "take? \n[a]straight \n[b]right \n> ").lower()
 
         if path_choice == "end":
-            end_game()
+            restart_game_choice()
 
         if (path_choice == "a" or path_choice == "straight"
                 and fall_decision == "a"):
