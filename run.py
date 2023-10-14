@@ -92,12 +92,14 @@ update_end_date = (f"{day}" + "/" + f"{month}" + "/" + f"{updated_end_year}"
                    + ", " + f"At time: {time}")
 
 cut_state = 0
-navigation_threat = 0
+nav_threat = 0
 reboot_code = 29137
+max_reboot_attempts = 3
 fall_decision = None
 navigation_error = False
 bleeding = False
 broken_vase = False
+space_suit = False
 
 
 def bleeding_wound(cut_state):
@@ -207,7 +209,7 @@ def open_hibernation_pod():
 #         quit()
 
 
-def navigation_failure(navigation_threat):
+def navigation_failure(nav_threat):
     """
     "
     Handles the player's actions and choices after they decide to explore
@@ -216,23 +218,23 @@ def navigation_failure(navigation_threat):
     exit to repair the ships navigation controls.
     """
     global navigation_error
-    navigation_threat += 1
-    if navigation_threat <= 3:
+    nav_threat += 1
+    if nav_threat <= 3:
         print("\nNavigation failure! Approaching a critical "
-              f"level. Level: {navigation_threat}/10")
+              f"level. Level: {nav_threat}/10")
         print("Manual reboot necessary.\n")
-    elif navigation_threat <= 6:
+    elif nav_threat <= 6:
         print("\nNavigation failure! Critical condition "
-              f"nearing severity. Level: {navigation_threat}/10")
+              f"nearing severity. Level: {nav_threat}/10")
         print("Manual reboot necessary.\n")
-    elif navigation_threat <= 9:
+    elif nav_threat <= 9:
         print("\nNavigation failure! Critical state "
-              f"is imminent. Level: {navigation_threat}/10")
+              f"is imminent. Level: {nav_threat}/10")
         print("Manual reboot necessary.\n")
     else:
         clear()
         print("\nNavigation failure! Critical state "
-              f"reached. Level: {navigation_threat}/10\n"
+              f"reached. Level: {nav_threat}/10\n"
               "The ship has entered an asteroid field.\n")
         print("/////////////////////\n")
         print("Collision in:\n")
@@ -245,7 +247,113 @@ def navigation_failure(navigation_threat):
         print("The End.")
         quit()
     navigation_error = True
-    return navigation_threat
+    return nav_threat
+
+
+def the_end_message():
+    """
+    Prints out the endgame message and some details to set the scene.
+    Offers an open ending with a possibility of expanding the game or
+    creating a sequel in the future.
+    """
+
+
+def outer_space():
+    """
+    Handles the player's actions and choices when they leave the
+    Airlock and 'step' into the vastness of space.
+    After putting on the space suit in the Airlock the user can decide
+    to exit the space ship and explore the outside of it.
+    """
+    global cut_state, nav_threat
+
+    cut_state = bleeding_wound(cut_state)
+    # Updates the cut_state
+
+    print("As you step outside the Airlock, you are immediately struck"
+          " by the breathtaking view of the cosmos. Countless stars "
+          "twinkle in the distance, and you're surrounded by the void of"
+          " space.")
+    print("The silence is eerie, and you feel a strange mix of awe and"
+          " vulnerability.")
+
+    if nav_threat > 0:
+        nav_threat = navigation_failure(nav_threat)
+        # Updates the navigation threat
+
+        print("After a few minutes of floating through the emptiness of"
+              " space, you head to find the navigation panel. As you "
+              "finally reach the designated area. The navigation reboot panel"
+              " is in sight, and it's your only hope to set things right.")
+        print("You follow the instructions step by step and reach the reboot "
+              "panel. You open it and notice that the power source seems to "
+              "be malfunctioning, which is likely the cause of the ship's "
+              "navigation error.")
+
+        while True:
+            print("You have two options: try to [a]repair the power source or "
+                  "[b]bypass it.")
+            outer_space_choice = input("What do you choose to do? \n[a]repair "
+                                       "\n[b]bypass \n> ").lower()
+
+            if outer_space_choice == "a" or outer_space_choice == "repair":
+                reboot_attempt = 0
+                while reboot_attempt < max_reboot_attempts:
+                    print("Please enter in the reboot code to initialise the "
+                          "repair port: ")
+                    print(f"(Attempt: {reboot_attempt + 1})")
+                    try:
+                        reboot_code_input = int(input("\n> "))
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number.")
+
+                    if reboot_code_input == reboot_code:
+                        print("You are in, the reboot code was correct! "
+                              "\nWell done!!")
+                        print("You carefully start repairing the power source."
+                              " After some time and with your steady hands, "
+                              "you manage to fix it. The navigation system "
+                              "comes back online, and the ship's trajectory "
+                              "is corrected.")
+                        print("Congratulations! You've successfully saved the "
+                              "mission, and the ship is now back on track. "
+                              "\nThe travellers will one day find out about "
+                              "your heroics and appreciate everything you did "
+                              "for them, complete strangers, on this faraway "
+                              "voyage into unknown.")
+                        break
+                    else:
+                        print("Incorrect code. Please try again.")
+                        reboot_attempt += 1
+                else:
+                    print("Maximum number of attempts reached. The navigation "
+                          "malfunction remains unrepaired.")
+                    if nav_threat > 0:
+                        nav_threat = navigation_failure(nav_threat)
+                        # Updates the navigation threat
+
+            elif outer_space_choice == "b" or outer_space_choice == "bypass":
+                print("You decide to bypass the malfunctioning power source as"
+                      " it's too risky to repair it without proper tools. The "
+                      "navigation system reboots, but you notice that the "
+                      "course is set for an unknown destination.")
+                print("You have a sinking feeling that your actions might have"
+                      " dire consequences, but for now, you've successfully "
+                      "fixed the immediate issue. The future of the mission "
+                      "remains uncertain.")
+                print("We are on an unknown path now, we will weave our own"
+                      " destiny.")
+                print("Maybe one day we will manage to get to our planet "
+                      "Terra Novus, but for now we will drift through space,"
+                      " until we find our way home.")
+
+            else:
+                print("You're paralyzed by the weight of the decision. Time is"
+                      " running out. The navigation system awaits your "
+                      "choice.")
+                print("Invalid input, your choices are [a]repair or [b]bypass")
+                print('You can end the game by typing "end"')
+                print(f'\nYou typed in "{outer_space_choice}"\n')
 
 
 def airlock():
@@ -256,6 +364,61 @@ def airlock():
     If the navigation system error is active, they will have a mission,
     otherwise they will meet their end.
     """
+    global cut_state, nav_threat
+
+    cut_state = bleeding_wound(cut_state)
+    # Updates the cut_state
+
+    if space_suit is True:
+        print("You approach the Airlock hatch and secure your spacesuit.")
+        print("The hatch opens smoothly, and you step into the airlock "
+              "chamber.")
+        print("You feel the rush of air leaving the chamber as it "
+              "depressurizes.")
+        print("Once the process is complete, the outer airlock door opens, "
+              "revealing the vastness of space.")
+        print("You're now ready to continue your journey into the unknown")
+
+        if nav_threat > 0:
+            nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
+
+        outer_space()
+
+    else:
+        print("You approach the Airlock hatch and begin to turn the "
+              "wheel to open it. The hatch, however, seems much"
+              " heavier than expected.")
+        print("With a lot of effort, you manage to turn the wheel "
+              "and start opening the hatch, but as you do, you feel"
+              " the air pressure in the chamber drop rapidly. The "
+              "alarm sirens begin to blare, and you realize your "
+              "mistake.")
+        print("The airlock chamber starts depressurizing rapidly,"
+              " causing extreme discomfort as you struggle to "
+              "breathe. Panic sets in as you realize you won't "
+              "survive in the vacuum of space without a "
+              "spacesuit.")
+        print("Desperation takes over as you scramble to put on the "
+              "nearby spacesuit, but it's too late. The airlock door "
+              "to space opens, and you're sucked out into the cold, "
+              "unforgiving void.")
+
+        if broken_vase is True:
+            print("As you slowly freeze and your vision darkens, the"
+                  "very last thing you see is a dark shadow looming "
+                  "over you.")
+            print("You can't make out any features, just a vague, "
+                  "unsettling silhouette.")
+            print("Fear and regret wash over you as you wonder who "
+                  "or what this shadow is and why it's watching you"
+                  " in your final moments. But it's too late, and your"
+                  " consciousness fades into nothingness in the void "
+                  "of space.")
+
+        print("You died.")
+        print("Your adventure ends here.")
+        print("Try again?")
 
 
 def engineering_bay():
@@ -277,6 +440,11 @@ def engineering_bay():
         The user can choose stay insideof the engineering bay and continue to "
         "explore orleave towards the Airlock, and continue the story."
         """
+        global cut_state, space_suit, nav_threat
+
+        cut_state = bleeding_wound(cut_state)
+        # Updates the cut_state
+
         print("As you head on out to leave you stop for a second.")
 
         engineering_bay_path_options = input("Do you:\n[a]stay and explore the"
@@ -284,17 +452,29 @@ def engineering_bay():
                                              "[b]leave to explore the Airlock"
                                              "\n> ").lower()
 
+        if engineering_bay_path_options == "end":
+            end_game()
+
         if (engineering_bay_path_options == "a" or
                 engineering_bay_path_options == "stay"):
             print("\nYou are certain you didn't discover all of the secret "
                   "within the Engineering Bay, you decide to continue "
                   "exploring it.")
+
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+                # Updates the navigation threat
+
             engineering_bay()
 
         elif (engineering_bay_path_options == "b" or
                 engineering_bay_path_options == "leave"):
             print("\nYou feel the time has come to continue exploring "
                   "further.")
+
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+                # Updates the navigation threat
 
             if broken_vase is True:
                 print("You are still curious why you haven't encountered the "
@@ -304,7 +484,7 @@ def engineering_bay():
                       "still hiding? Who or what woke them up? Have they been"
                       " awake for a long time?")
 
-            elif navigation_threat > 0:
+            elif nav_threat > 0:
                 print("You still wonder what is the reason you woke up? "
                       "Was it all because of the navigational error? Was"
                       " I the only one who could have fixed the system "
@@ -334,6 +514,43 @@ def engineering_bay():
                   "metallic tang and sterile cleanliness. It's clear that "
                   "you're now in a different section of the facility. The door"
                   " behind hisses closed, sealing you in the room.")
+
+            space_suit_choice = input("Would you like to put the space suit "
+                                      "on?\n[y]yes \n[n]no")
+
+            if space_suit_choice == "end":
+                end_game()
+
+            if space_suit_choice == "y" or space_suit_choice == "yes":
+                print("\nYou put on the space suit and get ready to walk "
+                      "into the airlock.")
+                print("You look out the small window and check the screen, "
+                      "making sure there is no malfunctions in the Airlock "
+                      "system.")
+                print("All of the systems look good and there is no visual "
+                      "malfunctions inside the Airlock.")
+                print("You use the screen to locate and check all of the "
+                      "instructions for navigation reboot. You memorize the"
+                      " detailed instructions on how to get to the navigation"
+                      " reboot panel and proceed to follow them carefully.")
+                print("One sentence grabs your attention as you read through,"
+                      " 'Reboot Code is generated by the computer for each "
+                      "error, code should have been written on the error "
+                      "report.'")
+                print("You remember seeing an error report earlier in the "
+                      "ship's Control Bay. It contained the reboot code "
+                      "needed to fix the navigation system.")
+                print("You scratch your head hoping you can remember it by"
+                      " the time you reach the navigation panel.")
+
+                space_suit = True
+                airlock()
+
+            elif space_suit_choice == "n" or space_suit_choice == "no":
+                print("In your hurry to leave, you neglect the spacesuit, "
+                      "thinking it might slow you down. ")
+                space_suit = False
+                airlock()
 
         else:
             print("Invalid input, your choices are [y]yes or [n]no")
@@ -382,6 +599,11 @@ def engineering_bay():
                                        "continue on your way.\n\n> ")
                 if explore_choice == "end":
                     end_game()
+
+                if nav_threat > 0:
+                    nav_threat = navigation_failure(nav_threat)
+                    # Updates the navigation threat
+
                 if explore_choice == "a" or explore_choice == "crafting":
                     print("\nYou approach the crafting station and immediately"
                           " start looking through all of the blueprints for "
@@ -515,10 +737,14 @@ def escape_pods_lift_ending():
     The user can choose to leave the Control Room across the room towards
     the Engineering Bay or to use a lift to go down into Escape Pods.
     """
-    global cut_state
+    global cut_state, nav_threat
 
     cut_state = bleeding_wound(cut_state)
     # Updates the cut_state
+
+    if nav_threat > 0:
+        nav_threat = navigation_failure(nav_threat)
+        # Updates the navigation threat
 
     print("\nAs the elevator starts to ascend to the Cargo Hold, it "
           "suddenly halts and the metallic groans grow louder and more "
@@ -543,7 +769,7 @@ def escape_pods():
     The user can choose to save themselves or use a lift and go back into
     Cargo Hold and continue to explore the rest of the ship.
     """
-    global cut_state, navigation_threat
+    global cut_state, nav_threat
 
     global cut_state
     if bleeding is False:
@@ -585,9 +811,9 @@ def escape_pods():
 
         if escape_pod_option == "a" or escape_pod_option == "escape":
 
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
             if navigation_error is True:
                 print("\nAs the weight of responsibility becomes too much to "
                       "bear on your own, the overwhelming stress drives you to"
@@ -623,9 +849,9 @@ def escape_pods():
             print("\nThank you for playing")
             quit()
         elif escape_pod_option == "b" or escape_pod_option == "save":
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
             print("\nAs you start thinking about the weight of the "
                   "responsibility, you start doubting whether you can do "
                   "this or not.")
@@ -652,7 +878,7 @@ def cargo_hold_path_choice():
     The user can choose to leave the Control Room across the room towards
     the Engineering Bay or to use a lift to go down into Escape Pods.
     """
-    global cut_state, navigation_threat, broken_vase
+    global cut_state, nav_threat, broken_vase
 
     cut_state = bleeding_wound(cut_state)
     # Updates the cut_state
@@ -686,9 +912,9 @@ def cargo_hold_path_choice():
             print("Riding the elevator, you realise you don't know where "
                   "you are going, you start to doubt whether it was a "
                   "smart idea just to jump in like that...\n")
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
             escape_pods()
         elif (cargo_hold_path_options == "b" or
               cargo_hold_path_options == "right"):
@@ -696,9 +922,9 @@ def cargo_hold_path_choice():
                   "your mind is not playing tricks on you, or worse "
                   "you have started loosing your mind and are becoming"
                   " delirious.")
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
             print("You run as fast as your legs can carry you. But "
                   "can't seem to catch up.")
             engineering_bay()
@@ -714,7 +940,7 @@ def cargo_hold():
     After a user reaches Control Room they can choose to explore the Cargo
     Hold, or continue on exploring the ship.
     """
-    global cut_state, navigation_threat
+    global cut_state, nav_threat
 
     global cut_state
     if bleeding is False:
@@ -754,9 +980,9 @@ def cargo_hold():
                   "tools, it is locked.")
             print("You decide to stop exploring the supply boxes "
                   "and containers and continue on...")
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
 
         elif (cargo_hold_options == "b" or
                 cargo_hold_options == "vehicles"):
@@ -774,9 +1000,9 @@ def cargo_hold():
             print("After hours of exploring you decide to stop "
                   "exploring the vehicles that The Collective "
                   "Government supplied us with and continue on...")
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
 
         elif (cargo_hold_options == "c" or
                 cargo_hold_options == "specimens"):
@@ -795,17 +1021,17 @@ def cargo_hold():
                   "to populate our new world.")
             print("You could continue exploring the animal specimens for "
                   "days, but you know it is time to continue on...")
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
 
         elif (cargo_hold_options == "d" or
                 cargo_hold_options == "continue"):
             print("\nYou made a decision to continue exploring the ship.")
             print("Who knows what you might find next...")
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-            # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+            # Updates the navigation threat
             cargo_hold_path_choice()
 
         else:
@@ -822,7 +1048,7 @@ def control_room_choose_path():
     User is located in the Control Room and needs
     to choose which way they would like to continue going.
     """
-    global cut_state, navigation_threat
+    global cut_state, nav_threat
     print("You find yourself at the cross section. Your options are: \n"
           "Go left into the Cargo Hold [a] or "
           "go right into the Engineering Bay [b]?")
@@ -838,18 +1064,18 @@ def control_room_choose_path():
             cargo_hold()
             cut_state = bleeding_wound(cut_state)
             # Updates the cut_state
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-                # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+                # Updates the navigation threat
 
         elif control_path_choice == "b" or control_path_choice == "right":
             print("\nYou head right towards the Engineering Bay. Wondering"
                   " what might you find there.")
             cut_state = bleeding_wound(cut_state)
             # Updates the cut_state
-            if navigation_threat > 0:
-                navigation_threat = navigation_failure(navigation_threat)
-                # Updates the navigation_threat
+            if nav_threat > 0:
+                nav_threat = navigation_failure(nav_threat)
+                # Updates the navigation threat
             engineering_bay()
 
         else:
@@ -867,7 +1093,7 @@ def control_room():
     everyone on the spaceship by fixing the navigation system manually
     by leaving through the airlock.
     """
-    global cut_state, navigation_threat
+    global cut_state, nav_threat
 
     if bleeding is False:
         clear()
@@ -898,9 +1124,9 @@ def control_room():
                   "manually reboot the system from the outside.")
             reboot_message = f"\nSystem reboot code: {reboot_code}".upper()
             print(reboot_message + "\nMemorise this code. It is important!")
-            navigation_threat = navigation_failure(navigation_threat)
+            nav_threat = navigation_failure(nav_threat)
             break
-            # Updates the navigation_threat
+            # Updates the navigation threat
 
         elif control_room_options == "continue" or control_room_options == "b":
             print("You decide to ignore all of the screens and "
