@@ -22,8 +22,115 @@ survivors = SHEET.worksheet('survivors')
 victims_data = victims.get_all_values()
 survivors_data = survivors.get_all_values()
 
-print(victims_data)
-print(survivors_data)
+
+ending_reasons = ["Electrical cord", "Bleed out", "Spaceship collision"
+                  " with asteroid", "Forced healing", "Elevator "
+                  "malfunction", "Frozen in space"]
+
+
+def update_victims_list(username, possible_ending):
+    """
+    Updates the victims google worksheet, adds a new username and
+    updates the reason of death from possible_ending.
+    """
+    # Create a new row starting with the username and input "X" if the
+    # user's game ending reason matches any of the ending reasons.
+    new_row = [username]
+    for reason in ending_reasons:
+        if possible_ending == reason:
+            new_row.append("X")
+        else:
+            new_row.append("")
+
+    # Get the number of rows in the victims_data (excluding the header row)
+    num_rows = len(victims_data)
+
+    # Insert a new row at the end (remember that row numbering starts from 1)
+    victims.insert_rows([new_row], row=num_rows + 1, value_input_option='RAW')
+
+
+surviving_ending_reasons = ["Escape pod - saved themselves",
+                            "Saved everyone - master reboot",
+                            "Saved everyone - system bypass"]
+
+
+def update_survivors_list(username, possible_ending):
+    """
+    Updates the victims google worksheet, adds new username and
+    updates the reason of death from possible_ending().
+    """
+    # Create a new row starting with the username and input "X" if the
+    # user's game ending reason matches any of the surviving reasons.
+    new_row = [username]
+    for reason in surviving_ending_reasons:
+        if possible_ending == reason:
+            new_row.append("X")
+        else:
+            new_row.append("")
+
+    # Get the number of rows in the survivors_data (excluding the header row)
+    num_rows = len(survivors_data)
+
+    # Insert a new row at the end (remember that row numbering starts from 1)
+    survivors.insert_rows([new_row], row=num_rows + 1,
+                          value_input_option='RAW')
+
+
+def progress_tracker():
+    """
+    Extracts progress data from 'victims_data' and 'survivors_data' variables
+    and organizes it into a dictionary containing information about the
+    username and the game ending reasons.
+    """
+    # Create an empty dictionary to store the progress_values
+    progress_values = {"victims": [], "survivors": []}
+
+    # Runs through the victims_data rows, excluding the header row
+    for row in victims_data[-5:]:
+        username = row[0]  # Sets first row as username/header
+        user_progress = []
+
+        # runs through ending_reasons and check for "X"
+        for i, reason in enumerate(ending_reasons):
+            if row[i + 1] == "X":
+                user_progress.append(reason)
+
+        progress_values["victims"].append({"username": username, "ending":
+                                           user_progress})
+
+    # Runs through survivors_data rows
+    for row in survivors_data[-5:]:
+        username = row[0]  # # Sets first row as username/header
+        user_progress = []
+
+        # Runs through your survivor reasons and check for "X"
+        # Updates the surviving_ending_reasons list
+        for i, reason in enumerate(surviving_ending_reasons):
+            if row[i + 1] == "X":
+                user_progress.append(reason)
+
+        progress_values["survivors"].append({"username": username, "ending":
+                                             user_progress})
+
+    return progress_values
+
+
+def show_progress_score():
+    """
+    Retrieves and displays the progress report of game endings for 'victims'
+    and 'survivors'.
+    """
+    clear()
+    print("██ ██ ███ ███ ██ ██▄ ███ ███ ███ ██▄\n"
+          "█▄ █╬ █╬█ █▄╬ █▄ █▄█ █╬█ █▄█ █▄╬ █╬█\n"
+          "▄█ ██ █▄█ █╬█ █▄ █▄█ █▄█ █╬█ █╬█ ███")
+    progress_values = progress_tracker()
+    for worksheet, users in progress_values.items():
+        print(f"\n\nProgress report: {worksheet}\n")
+        for user in users:
+            print(f"Username: {user['username']} \nEnding met by: "
+                  f"{', '.join(user['ending'])}\n")
+
 
 # Date and time
 # Gets and extracts current date and time for Dublin
@@ -67,10 +174,34 @@ def end_game():
     """
     print("Thank you for playing.")
     print("Good Luck on your future voyage.")
-    print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
-          "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
-          "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
     quit()
+
+
+def request_username():
+    """
+    Get the player's username as input to use later on in the game to
+    save the game outcome. Whether the user has survived or not.
+    """
+    while True:
+        username = input("\nPlease enter your username: \n> ").strip()
+        # Removes leading and trailing whitespace
+        if username == "end":
+            restart_game_choice()
+        if username == "progress" or username == "score":
+            show_progress_score()
+        if (username and not username.isspace() and not
+                username.isnumeric()):
+            return username
+        # Returns username only if input is not empty
+        # Prevents using only whitespace
+        elif username.isnumeric():
+            print("\nUsername cannot consist of only numbers. Please "
+                  "try again.")
+        # Prevents entry of numeric values
+        else:
+            print("\nUsername cannot be empty or consist of only whitespace."
+                  "Please try again.")
+            print('You can end the game by typing "end"')
 
 
 class HealthState:
@@ -91,12 +222,18 @@ class HealthState:
             if self.health <= 0:
                 print(f"\nYou reached critical state. "
                       "You didn't reach Med Bay.")
-                print(f"Health state: |{'_' * self.health}| 0% X___X")
+                print(f"Health state: |{'_' * 100}| 0% X___X")
                 print("You died.\n")
                 print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
                       "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
                       "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
-                self.bleeding = False
+
+                survived = False
+                possible_ending = "Bleed out"
+                game_outcome_tracker.set_possible_ending(possible_ending)
+                game_outcome_tracker.set_survival_status(survived)
+                update_victims_list(game_outcome_tracker.username,
+                                    possible_ending)
                 restart_game_choice()
             else:
                 print("\nYou are slowly bleeding out, "
@@ -162,12 +299,51 @@ class NavigationFailure:
         print("\nBANG\nBLAST\nBLOW\nBOOM")
         print("\nThe spaceship perished.")
         print("You died.")
-        print("The End.")
+        print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+              "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+              "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+
+        survived = False
+        possible_ending = "Spaceship collision with asteroid"
+        game_outcome_tracker.set_possible_ending(possible_ending)
+        game_outcome_tracker.set_survival_status(survived)
+        update_victims_list(game_outcome_tracker.username,
+                            possible_ending)
         restart_game_choice()
+
+
+class GameOutcomeTracker:
+    def __init__(self):
+        self.username = None
+        self.survived = None
+        self.possible_ending = None
+
+    def set_username(self, username):
+        self.username = username
+
+    def set_survival_status(self, survived):
+        self.survived = survived
+
+    def set_possible_ending(self, possible_ending):
+        self.possible_ending = possible_ending
+
+    def get_ending_status(self):
+        if self.survived is not None:
+            return "Survived" if self.survived else "Died"
+        return "Unknown"
+
+    def get_possible_ending(self):
+        return self.possible_ending
+
+    def __str__(self):
+        return (f"Username: {self.username}, Ending Status: "
+                f"{self.get_ending_status}, Ending reason:"
+                f"{self.get_possible_ending}")
 
 
 player_health = HealthState()
 navigation_fault = NavigationFailure()
+game_outcome_tracker = GameOutcomeTracker()
 
 
 def reset_initial_values():
@@ -175,6 +351,7 @@ def reset_initial_values():
     Resets all of the values to the initial state to prepare for the complete
     restart of the game, so user can start from the beginning.
     """
+    # Reset all values to initial state
     global fall_decision, navigation_fault
     global shadow_figure, space_suit, player_health
     fall_decision = None
@@ -182,6 +359,11 @@ def reset_initial_values():
     space_suit = False
     player_health = HealthState()
     navigation_fault = NavigationFailure()
+
+    # Re-fetch the worksheet data
+    global victims_data, survivors_data
+    victims_data = victims.get_all_values()
+    survivors_data = survivors.get_all_values()
 
 
 def restart_game():
@@ -235,8 +417,13 @@ def start_game_message():
           "       ░░                 ▓▓▒▒▒▒▓▓▒▒▒▒▓▓   ▒▒                    \n"
           "                  ░░      ▓▓▒▒▒▒██▒▒▒▒▓▓            ░░           \n"
           "                        ████▓▓▓▓▓▓██▓▓▓▓██      ░░        ✩‧₊    \n"
-          "         ▒▒   *☆      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                     \n"
-          "                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                   \n"
+          "         ▒▒   *☆       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█                      \n"
+          "                      ▓▓▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█    ✩‧₊         ▒▒   \n"
+          "           ✩‧₊       ▓▓▓▓▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█         ₊˚*        \n"
+          "  ▒▒   *☆     ▒▒    ██▓▓▒▒▒▒██▓▓▓▓██▓▓▒▒▒▒▓▓██                   \n"
+          "               ₊˚*  ▓██▓▒▒▒▒▓██▓▓▓▓██▓▒▒▒▒▓▓██      ▒▒   *☆      \n"
+          "         ✩‧₊        ▓▓██▓▓▓▓▓▒▒▒▒▒▒▒▒█▓▓▓▓▓▓██                   \n"
+          "                    ▓▓▓██▓▓▓▓▒▒▒▒▒▒▒▒██▓▓▓▓▓▓▓                   \n"
           "             ░░     ▓▓▓▓▓▓██▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓        ░░         \n"
           "   ░░               ▓▓▓▓▓▓░░████████████░░████              ░░   \n"
           "                    ▓▓    ▓▓░░░░░░▓▓░░░░    ▓▓   ░░              \n"
@@ -248,10 +435,13 @@ def start_game_message():
           "            ▒▒                ▒▒    ▒▒          ▒▒    ▒▒        \n")
     # The rocket was taken from https://textart.sh/topic/rocket
     # The sign was created and taken from https://www.textartgenerator.net/
-    print("Welcome to your spaceship adventure!")
-    print('\nIf for any reason you decide to end the game, you can do so '
-          'by writing "end" into any input field at any stage of the '
-          'game.\n')
+    print("\nWelcome to your spaceship adventure!\n")
+    username = request_username()
+    game_outcome_tracker.set_username(username)
+    print('In case you want to check out the scoreboards, you can do so by '
+          'typing "progress" or "scores" at any point through the game.')
+    print('\nIf for any reason you decide to end the game, you can do so by '
+          'writing "end" into any input field at any stage of the game.\n')
     print("It is a year 3076. You are an interplanetary traveler, "
           "at least that is what they said you will be. \n")
     print("Due to an overpopulation on our home planet Earth"
@@ -273,6 +463,9 @@ def fall_choice():
         if fall_decision == "end":
             restart_game_choice()
 
+        if fall_decision == "progress" or fall_decision == "score":
+            show_progress_score()
+
         if fall_decision == "a":
             print("\nYou managed to grab onto the pod door")
             print("You regained your balance and start exploring. You are "
@@ -286,6 +479,12 @@ def fall_choice():
             print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
                   "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
                   "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+            survived = False
+            possible_ending = "Electrical cord"
+            game_outcome_tracker.set_possible_ending(possible_ending)
+            game_outcome_tracker.set_survival_status(survived)
+            update_victims_list(game_outcome_tracker.username,
+                                possible_ending)
             restart_game_choice()
         elif fall_decision == "c":
             print("\nYou fell and cut your hand; you are bleeding.")
@@ -314,8 +513,13 @@ def open_hibernation_pod():
         pod_choice = input("\nAre you ready to open and leave your "
                            "hibernation pod? \n[y]yes "
                            "\n[n]no\n> ").lower()
+
         if pod_choice == "end":
             restart_game_choice()
+
+        if pod_choice == "progress" or pod_choice == "score":
+            show_progress_score()
+
         if pod_choice == "yes" or pod_choice == "y":
             print("\nWith a little bit of struggle, the pod creaks open.")
             print("You step out but your legs falter, you start falling.\n")
@@ -326,7 +530,7 @@ def open_hibernation_pod():
             print("(-, –)｡｡zZ💤💤💤\n")
             print("Let's try again.")
         else:
-            print("\nInvalid input. Please choose either yes/y or no/n")
+            print("\nInvalid input. Please choose either [y]yes or [n]no")
             print('You can end the game by typing "end"')
             print(f'\nYou typed in "{pod_choice}"\n')
 
@@ -365,6 +569,16 @@ def the_end_message():
     print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
           "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
           "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+
+    survived = True
+    if bypass_system is True:
+        possible_ending = "Saved everyone - system bypass"
+    else:
+        possible_ending = "Saved everyone - master reboot"
+    game_outcome_tracker.set_possible_ending(possible_ending)
+    game_outcome_tracker.set_survival_status(survived)
+    update_survivors_list(game_outcome_tracker.username,
+                          possible_ending)
     restart_game_choice()
 
 
@@ -404,9 +618,14 @@ def outer_space():
             if outer_space_choice == "end":
                 restart_game_choice()
 
+            if (outer_space_choice == "progress" or
+                    outer_space_choice == "score"):
+                show_progress_score()
+
             if outer_space_choice == "a" or outer_space_choice == "repair":
                 reboot_attempt = 0
                 while reboot_attempt < max_reboot_attempts:
+                    clear()
                     print("Please enter in the reboot code to initialise the "
                           "repair port: ")
                     print(f"(Attempt: {reboot_attempt + 1})")
@@ -441,6 +660,7 @@ def outer_space():
                         # Updates the navigation threat
 
             elif outer_space_choice == "b" or outer_space_choice == "bypass":
+                clear()
                 print("You decide to bypass the malfunctioning power source as"
                       " it's too risky to repair it without proper tools. The "
                       "navigation system reboots, but you notice that the "
@@ -487,7 +707,7 @@ def airlock():
               "depressurizes.")
         print("Once the process is complete, the outer airlock door opens, "
               "revealing the vastness of space.")
-        print("You're now ready to continue your journey into the unknown")
+        print("You're now ready to continue your journey into the unknown.")
 
         if navigation_fault.nav_threat > 0:
             navigation_fault.navigation_failure()
@@ -517,20 +737,27 @@ def airlock():
         if shadow_figure is True:
             print("As you slowly freeze and your vision darkens, the"
                   "very last thing you see is a dark shadow looming "
-                  "over you.")
+                  "over you.\n")
             print("You can't make out any features, just a vague, "
                   "unsettling silhouette.")
             print("Fear and regret wash over you as you wonder who "
                   "or what this shadow is and why it's watching you"
                   " in your final moments. But it's too late, and your"
                   " consciousness fades into nothingness in the void "
-                  "of space.")
+                  "of space.\n")
 
         print("You died.")
         print("Your adventure ends here.")
         print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
               "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
               "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+
+        survived = False
+        possible_ending = "Froze in space"
+        game_outcome_tracker.set_possible_ending(possible_ending)
+        game_outcome_tracker.set_survival_status(survived)
+        update_victims_list(game_outcome_tracker.username,
+                            possible_ending)
         restart_game_choice()
 
 
@@ -567,8 +794,13 @@ def engineering_bay():
             if engineering_bay_path_options == "end":
                 restart_game_choice()
 
+            if (engineering_bay_path_options == "progress" or
+                    engineering_bay_path_options == "score"):
+                show_progress_score()
+
             if (engineering_bay_path_options == "a" or
                     engineering_bay_path_options == "stay"):
+                clear()
                 print("\nYou are certain you didn't discover all of the secret"
                       " within the Engineering Bay, you decide to continue "
                       "exploring it.")
@@ -581,6 +813,7 @@ def engineering_bay():
 
             elif (engineering_bay_path_options == "b" or
                     engineering_bay_path_options == "leave"):
+                clear()
                 print("\nYou feel the time has come to continue exploring "
                       "further.")
 
@@ -634,7 +867,13 @@ def engineering_bay():
 
                     if space_suit_choice == "end":
                         restart_game_choice()
+
+                        if (space_suit_choice == "progress" or
+                                space_suit_choice == "score"):
+                            show_progress_score()
+
                     if space_suit_choice == "y" or space_suit_choice == "yes":
+                        clear()
                         print("\nYou put on the space suit and get ready to "
                               "walk into the airlock.")
                         print("You look out the small window and check the "
@@ -642,24 +881,29 @@ def engineering_bay():
                               "in the Airlock system.")
                         print("All of the systems look good and there is no "
                               "visual malfunctions inside the Airlock.")
-                        print("You use the screen to locate and check all of "
-                              "the instructions for navigation reboot. You "
-                              "memorize the detailed instructions on how to "
-                              "get to the navigation reboot panel and proceed "
-                              "to follow them  carefully.")
-                        print("One sentence grabs your attention as you read "
-                              "through, 'Reboot Code is generated by the "
-                              "computer for each error, code should have been "
-                              "written on the error report.'")
-                        print("You remember seeing an error report earlier in "
-                              "the ship's Control Bay. It contained the reboot"
-                              " code needed to fix the navigation system.")
-                        print("You scratch your head hoping you can remember "
-                              "it by the time you reach the navigation panel.")
+                        if navigation_fault.nav_threat > 0:
+                            print("\nYou use the screen to locate and check "
+                                  "all of the instructions for navigation "
+                                  "reboot. You memorize the detailed instruc"
+                                  "tions on how to get to the navigation "
+                                  "reboot panel and proceed to follow them  "
+                                  "carefully.")
+                            print("One sentence grabs your attention as you "
+                                  "read through, 'Reboot Code is generated by "
+                                  "the computer for each error, code should "
+                                  "have been written on the error report.'")
+                            print("You remember seeing an error report earlier"
+                                  " in the ship's Control Bay. It contained "
+                                  "the reboot code needed to fix the "
+                                  "navigation system.")
+                            print("You scratch your head hoping you can "
+                                  "remember it by the time you reach the "
+                                  "navigation panel.\n")
                         space_suit = True
                         airlock()
 
                     elif space_suit_choice == "n" or space_suit_choice == "no":
+                        clear()
                         print("In your hurry to leave, you neglect the "
                               "spacesuit, thinking it might slow you down. ")
                         space_suit = False
@@ -698,8 +942,14 @@ def engineering_bay():
     while True:
         explore_engineering_bay = input("\nWould you like to explore the "
                                         "Engineering bay?\n[y]yes\n[n]no.\n> ")
+
         if explore_engineering_bay == "end":
             restart_game_choice()
+
+        if (explore_engineering_bay == "progress" or
+                explore_engineering_bay == "score"):
+            show_progress_score()
+
         if explore_engineering_bay == "y" or explore_engineering_bay == "yes":
             print("\nYou start exploring and walking around. You are as exited"
                   " as a lettle kid in a chocolate factory.")
@@ -723,6 +973,7 @@ def engineering_bay():
                     # Updates the navigation threat
 
                 if explore_choice == "a" or explore_choice == "crafting":
+                    clear()
                     print("\nYou approach the crafting station and immediately"
                           " start looking through all of the blueprints for "
                           "various machinery.")
@@ -753,6 +1004,7 @@ def engineering_bay():
 
                 elif (explore_choice == "b" or explore_choice == "constructors"
                       or explore_choice == "deconstructors"):
+                    clear()
                     print("\nYou find yourself irresistibly drawn to the "
                           "constructors and deconstructors.\nThese "
                           "sophisticated devices are marvels of engineering, "
@@ -790,6 +1042,7 @@ def engineering_bay():
 
                 elif (explore_choice == "c" or explore_choice == "mystery"
                       or explore_choice == "computer"):
+                    clear()
                     print("\nThe ancient computer sits silently in the corner,"
                           " a stark contrast of a simple machine next to the"
                           " gleaming technology that surrounds it.")
@@ -816,6 +1069,7 @@ def engineering_bay():
                           "update, you continue to explore further.")
                 elif (explore_choice == "d" or explore_choice == "stop"
                       or explore_choice == "continue"):
+                    clear()
                     print("\nYou have decided to continue on with your "
                           "adventure.")
                     print("As you walk down the dimly lit corridor, you"
@@ -832,6 +1086,7 @@ def engineering_bay():
                     print(f'\nYou typed in "{explore_choice}"\n')
 
         elif explore_engineering_bay == "n" or explore_engineering_bay == "no":
+            clear()
             print("\nYou have decided to continue on with your "
                   "adventure.")
             print("As you walk down the dimly lit corridor, you"
@@ -875,7 +1130,17 @@ def escape_pods_lift_ending():
           "safe in your bed, waking up from this nightmare, but...")
     print("\nEverything goes dark, you loose consciousness and slip away "
           "into nothingness.")
-    print("\nThe End.")
+    print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+          "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+          "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+
+    survived = False
+    possible_ending = "Elevator malfunction"
+    game_outcome_tracker.set_possible_ending(possible_ending)
+    game_outcome_tracker.set_survival_status(survived)
+    update_victims_list(game_outcome_tracker.username,
+                        possible_ending)
+    restart_game_choice()
 
 
 def escape_pods():
@@ -918,8 +1183,12 @@ def escape_pods():
         if escape_pod_option == "end":
             restart_game_choice()
 
-        if escape_pod_option == "a" or escape_pod_option == "escape":
+        if (escape_pod_option == "progress" or
+                escape_pod_option == "score"):
+            show_progress_score()
 
+        if escape_pod_option == "a" or escape_pod_option == "escape":
+            clear()
             if navigation_fault.nav_threat > 0:
                 navigation_fault.navigation_failure()
                 # Updates the navigation threat
@@ -954,13 +1223,23 @@ def escape_pods():
                   "sense of uncertainty and a feeling of dread that this"
                   " is not completely over.\n")
             print("...\n")
-            print("The End.")
             print("\nThank you for playing")
+            print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+                  "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+                  "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+
+            survived = True
+            possible_ending = "Escape pod - saved themselves"
+            game_outcome_tracker.set_possible_ending(possible_ending)
+            game_outcome_tracker.set_survival_status(survived)
+            update_survivors_list(game_outcome_tracker.username,
+                                  possible_ending)
             restart_game_choice()
         elif escape_pod_option == "b" or escape_pod_option == "save":
             if navigation_fault.nav_threat > 0:
                 navigation_fault.navigation_failure()
                 # Updates the navigation threat
+            clear()
             print("\nAs you start thinking about the weight of the "
                   "responsibility, you start doubting whether you can do "
                   "this or not.")
@@ -1013,8 +1292,13 @@ def cargo_hold_path_choice():
         if cargo_hold_path_options == "end":
             restart_game_choice()
 
+        if (cargo_hold_path_options == "progress" or
+                cargo_hold_path_options == "score"):
+            show_progress_score()
+
         if (cargo_hold_path_options == "a" or
                 cargo_hold_path_options == "left"):
+            clear()
             print("\nYou step into the mysterious elevator, its metal doors "
                   "creak and slide shut as it whisks you away to a lower "
                   "level.\n")
@@ -1027,6 +1311,7 @@ def cargo_hold_path_choice():
             escape_pods()
         elif (cargo_hold_path_options == "b" or
               cargo_hold_path_options == "right"):
+            clear()
             print("\nYou decide to follow to the Engineering Bay, hoping "
                   "your mind is not playing tricks on you, or worse "
                   "you have started loosing your mind and are becoming"
@@ -1071,7 +1356,12 @@ def cargo_hold():
         if cargo_hold_options == "end":
             restart_game_choice()
 
+        if (cargo_hold_options == "progress" or
+                cargo_hold_options == "score"):
+            show_progress_score()
+
         if cargo_hold_options == "a" or cargo_hold_options == "boxes":
+            clear()
             print("\nYou start reading the signs on all of the boxes "
                   "and containers")
             print("You have been searching through boxes for hours...")
@@ -1089,6 +1379,7 @@ def cargo_hold():
 
         elif (cargo_hold_options == "b" or
                 cargo_hold_options == "vehicles"):
+            clear()
             print("\nYou continue walking among all of the advanced "
                   "and antique vehicles and machinery.")
             print("You are awed by the vast array before your sight.")
@@ -1109,6 +1400,7 @@ def cargo_hold():
 
         elif (cargo_hold_options == "c" or
                 cargo_hold_options == "specimens"):
+            clear()
             print("\nYou choose to examine the collection of live "
                   "animal specimens that were sent with us on this "
                   "journey to Terra Novus.")
@@ -1130,6 +1422,7 @@ def cargo_hold():
 
         elif (cargo_hold_options == "d" or
                 cargo_hold_options == "continue"):
+            clear()
             print("\nYou made a decision to continue exploring the ship.")
             print("Who knows what you might find next...")
             if navigation_fault.nav_threat > 0:
@@ -1158,10 +1451,16 @@ def control_room_choose_path():
                                     "into the Cargo Hold \n[b]Go right "
                                     "into the Engineering Bay"
                                     "\n> ").lower()
+
         if control_path_choice == "end":
             restart_game_choice()
 
+        if (control_path_choice == "progress" or
+                control_path_choice == "score"):
+            show_progress_score()
+
         if control_path_choice == "a" or control_path_choice == "left":
+            clear()
             player_health.take_damage()
             # Updates the health state
             print("\nYou head left towards the Cargo Hold.")
@@ -1173,6 +1472,7 @@ def control_room_choose_path():
             cargo_hold()
 
         elif control_path_choice == "b" or control_path_choice == "right":
+            clear()
             player_health.take_damage()
             # Updates the health state
 
@@ -1215,7 +1515,12 @@ def control_room():
         if control_room_options == "end":
             restart_game_choice()
 
+        if (control_room_options == "progress" or
+                control_room_options == "score"):
+            show_progress_score()
+
         if control_room_options == "explore" or control_room_options == "a":
+            clear()
             print("\nYou look at all of the screens. You reach one "
                   "that is blinking with multiple error messages.")
             print("You start reading the messages, but one catches "
@@ -1232,6 +1537,7 @@ def control_room():
             break
 
         elif control_room_options == "continue" or control_room_options == "b":
+            clear()
             print("You decide to ignore all of the screens and "
                   "continue on your way to explore the ship.")
             break
@@ -1281,7 +1587,16 @@ def forceful_healing_procedure():
     print("\n/////////////////\n")
     print("You have received a deadly dose of serum.")
     print("You died.")
-    print("The End")
+    print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+          "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+          "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+
+    survived = False
+    possible_ending = "Forced healing"
+    game_outcome_tracker.set_possible_ending(possible_ending)
+    game_outcome_tracker.set_survival_status(survived)
+    update_victims_list(game_outcome_tracker.username,
+                        possible_ending)
     restart_game_choice()
 
 
@@ -1310,10 +1625,12 @@ def med_bay_choose_path():
         if med_bay_path_choice == "end":
             restart_game_choice()
 
-        if bleeding is False:
-            clear()
+        if (med_bay_path_choice == "progress" or
+                med_bay_path_choice == "score"):
+            show_progress_score()
 
         if med_bay_path_choice == "a" or med_bay_path_choice == "left":
+            clear()
             print("\nYou take the long winding corridor towards the "
                   "Observation Deck.")
             print("You turn the corner and find yourself rendered speechless"
@@ -1353,18 +1670,25 @@ def med_bay_choose_path():
             if observation_deck_option == "end":
                 restart_game_choice()
 
+            if (observation_deck_option == "progress" or
+                    observation_deck_option == "score"):
+                show_progress_score()
+
             if (observation_deck_option == "a" or
                     observation_deck_option == "Engineering Bay"):
+                clear()
                 print("\nYou go down the long halway heading into Engineering "
                       "Bay still thinking about the beautiful sight you have"
                       " just experienced.")
                 engineering_bay()
             elif (observation_deck_option == "b" or
                   observation_deck_option == "Med Bay"):
+                clear()
                 print("\nYou turn around to explore the Medical Bay further.")
                 med_bay_choose_path()
 
         elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
+            clear()
             print("\nYou decide to head through the small straight corridor"
                   " to your right")
             print("As you begin to walk, you can't help but be awed by the "
@@ -1429,7 +1753,11 @@ def med_bay():
         if healing_chamber == "end":
             restart_game_choice()
 
+        if (healing_chamber == "progress" or healing_chamber == "score"):
+            show_progress_score()
+
         if healing_chamber == "y" or healing_chamber == "yes":
+
             print("\nScanning...\n")
             print("Scan complete!")
             if player_health.bleeding:
@@ -1438,14 +1766,20 @@ def med_bay():
                 heal_wound = input("\nWould you like to heal the wound? "
                                    "\n[y]yes \n[n]no \n> ").lower()
 
+                if heal_wound == "end":
+                    restart_game_choice()
+
+                if (heal_wound == "progress" or
+                        heal_wound == "score"):
+                    show_progress_score()
+
                 if heal_wound == "y" or heal_wound == "yes":
+                    clear()
                     healing_procedure()
 
                 elif heal_wound == "n" or heal_wound == "no":
+                    clear()
                     forceful_healing_procedure()
-
-                if healing_chamber == "end":
-                    restart_game_choice()
 
             else:
                 print("No anomalies detected.")
@@ -1454,8 +1788,6 @@ def med_bay():
             med_bay_choose_path()
 
         elif healing_chamber == "n" or healing_chamber == "no":
-            player_health.take_damage()
-            # Updates the health state
             med_bay_choose_path()
 
         else:
@@ -1483,8 +1815,12 @@ def choose_path(fall_decision):
         if path_choice == "end":
             restart_game_choice()
 
+        if (path_choice == "progress" or path_choice == "score"):
+            show_progress_score()
+
         if (path_choice == "a" or path_choice == "straight"
                 and fall_decision == "a"):
+            clear()
             print("You head straight towards the Control Room.")
             print("Eager to continue exploring.\n")
             control_room()
@@ -1523,11 +1859,9 @@ def main():
     the game.
     """
     clear()
-
-    print("SPACESHIP ADVENTURE \n")
     start_game_message()
     open_hibernation_pod()
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
