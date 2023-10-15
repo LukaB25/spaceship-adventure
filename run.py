@@ -44,8 +44,43 @@ def end_game():
     """
     print("Thank you for playing.")
     print("Good Luck on your future voyage.")
-    print("The End!\n")
+    print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+          "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+          "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
     quit()
+
+
+class HealthState:
+    def __init__(self):
+        self.health = 100
+        self.bleeding = False
+
+    def take_damage(self):
+        if self.bleeding:
+            damage_amount = 20
+            self.health -= damage_amount
+            if self.health <= 0:
+                print(f"\nYou reached critical state. "
+                      "You didn't reach Med Bay.")
+                print(f"Health state: |{'_' * self.health}| 0% X___X")
+                print("You died.\n")
+                print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+                      "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+                      "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
+                self.bleeding = False
+                restart_game_choice()
+            else:
+                print("\nYou are slowly bleeding out, "
+                      "find some bandages quickly.")
+                print(f"You are hurt, reach the Med Bay.\n")
+                print(f"Health state: |{'█' * self.health}"
+                      f"{'_' * (100 - self.health)}| "
+                      f"{self.health}% *___*")
+        else:
+            clear()
+
+
+player_health = HealthState()
 
 
 def reset_initial_values():
@@ -53,15 +88,14 @@ def reset_initial_values():
     Resets all of the values to the initial state to prepare for the complete
     restart of the game, so user can start from the beginning.
     """
-    global cut_state, nav_threat, fall_decision, navigation_error
-    global bleeding, broken_vase, space_suit
-    cut_state = 0
+    global nav_threat, fall_decision, navigation_error
+    global broken_vase, space_suit, player_health
     nav_threat = 0
     fall_decision = None
     navigation_error = False
-    bleeding = False
     broken_vase = False
     space_suit = False
+    player_health = HealthState()
 
 
 def restart_game():
@@ -79,8 +113,8 @@ def restart_game_choice():
     Gives user a choice to either restart the game or to end the game.
     Restarts the game and starts from the beginning.
     """
-    restart_choice = input("\nDo you want to restart the game? \n[y]yes "
-                           "\n[n]no \n> ").lower()
+    restart_choice = input("\nDo you want to restart the game from the"
+                           " beginning? \n[y]yes \n[n]no \n> ").lower()
     if restart_choice == "y" or restart_choice == "yes":
         print("\nRestarting game...\n")
         restart_game()
@@ -94,35 +128,35 @@ def start_game_message():
     Prints out the welcome message and some details to set the scene.
     Offers some insight in the game for the user.
     """
-    print("                                                                 \n"
-          "               ░░                     ░░                  ░░     \n"
+    print("                                               *★                \n"
+          "          *★   ░░                     ░░                  ░░     \n"
           "   ███ ███ ███ ███ ███ ┼┼ ███ ██▄ █▄█ ███ █┼┼█ ███ █┼█ ███ ███   \n"
           "   █▄▄ █▄█ █▄█ █┼┼ █▄┼ ┼┼ █▄█ █┼█ ███ █▄┼ ██▄█ ┼█┼ █┼█ █▄┼ █▄┼   \n"
           "   ▄▄█ █┼┼ █┼█ ███ █▄▄ ┼┼ █┼█ ███ ┼█┼ █▄▄ █┼██ ┼█┼ ███ █┼█ █▄▄   \n"
-          "          ░░           ░░                        ░░              \n"
+          "          ░░           ░░   *☆*★                 ░░              \n"
           "                 ░░                   ░░                         \n"
           "      ░░                    ░░  ██        ░░                     \n"
-          "  ░░                            ██                    ░░░░       \n"
+          "  ░░       *                    ██        *✩‧₊˚       ░░░░       \n"
           "                 ░░             ██                               \n"
           "                              ▓▓▓▓▓▓                             \n"
-          "                            ▓▓▓▓▓▓▓▓▓▓                           \n"
+          "    :*.°★*                  ▓▓▓▓▓▓▓▓▓▓           ₊˚*             \n"
           "          ▒▒          ░░  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓                         \n"
-          "                          ▓▓▒▒▓▓▓▓▒▒▓▓▓▓         ▒▒              \n"
+          "              ✩           ▓▓▒▒▓▓▓▓▒▒▓▓▓▓         ▒▒    *☆*       \n"
           "                          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓     ░░                  \n"
-          "    ▒▒       ░░           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓                 ░░      \n"
+          "    ▒▒       ░░  *★       ▓▓▓▓▓▓▓▓▓▓▓▓▓▓   ✩‧₊           ░░      \n"
           "                          ░░░░▒▒░░░░░░░░                         \n"
-          "                          ▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ░░             \n"
+          "   * ✩            ✩‧₊     ▓▓▓▓▓▓▓▓▓▓▓▓▓▓          ░░             \n"
           "       ░░                 ▓▓▒▒▒▒▓▓▒▒▒▒▓▓   ▒▒                    \n"
           "                  ░░      ▓▓▒▒▒▒██▒▒▒▒▓▓            ░░           \n"
-          "                        ████▓▓▓▓▓▓██▓▓▓▓██      ░░               \n"
-          "         ▒▒           ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                     \n"
+          "                        ████▓▓▓▓▓▓██▓▓▓▓██      ░░        ✩‧₊    \n"
+          "         ▒▒   *☆      ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                     \n"
           "                    ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██                   \n"
           "             ░░     ▓▓▓▓▓▓██▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓        ░░         \n"
           "   ░░               ▓▓▓▓▓▓░░████████████░░████              ░░   \n"
           "                    ▓▓    ▓▓░░░░░░▓▓░░░░    ▓▓   ░░              \n"
-          "                   ░░  ▒▒               ▒▓░░ ▒▒                  \n"
+          "                   ░░  ▒▒               ▒▓░░ ▒▒      *☆*★        \n"
           "                  ▒▒▓░▓▓▒▒             ░░ ▓▓▒▒                   \n"
-          "                   ░░▓▒▒                ▒▒▓▒░░                   \n"
+          "      *☆*★         ░░▓▒▒                ▒▒▓▒░░                   \n"
           "                    ▒ ▓░░               ░░▒▓▒                    \n"
           "                     ░░                   ░░                     \n"
           "            ▒▒                ▒▒    ▒▒          ▒▒    ▒▒        \n")
@@ -143,29 +177,7 @@ def start_game_message():
           "and you need to find out what is going on.")
 
 
-def bleeding_wound(cut_state):
-    """
-    Handles user choice to fall and deals damage until user either finds
-    bandages or reaches critical state.
-    """
-    global bleeding
-    if bleeding:
-        cut_state += 1
-        if cut_state <= 5:
-            print("\nYou are slowly bleeding out, "
-                  "find some bandages quickly.")
-            print(f"You are hurt, reach the Med Bay: {cut_state}/6\n")
-        elif cut_state == 6:
-            print(f"\nYou reached critical state {cut_state}/6. "
-                  "You didn't reach Med Bay.")
-            print("You died.\n")
-            bleeding = False
-            restart_game_choice()
-    return cut_state
-
-
 def fall_choice():
-    global bleeding, cut_state
     while True:
         fall_decision = input("As you are falling, you decide to: \n"
                               "[a] grab onto the pod door \n"
@@ -185,15 +197,17 @@ def fall_choice():
             print("\nYou accidentally grabbed the electrical cord "
                   "and got electrocuted.")
             print("You died.")
-            print("The End.")
+            print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+                  "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+                  "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
             restart_game_choice()
         elif fall_decision == "c":
             print("\nYou fell and cut your hand; you are bleeding.")
             print("You should find some bandages to cover the wound.")
 
-            bleeding = True
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
+            player_health.bleeding = True
+            player_health.take_damage()
+            # Use the HealthStats instance
 
             print("You start exploring the room.\n")
 
@@ -223,10 +237,8 @@ def open_hibernation_pod():
         elif pod_choice == "no" or pod_choice == "n":
             print("\nYou chose not to open the hibernation pod.")
             print("You fell asleep. \n")
-            print("//////////////////////////////////////////\n")
+            print("(-, –)｡｡zZ💤💤💤\n")
             print("Let's try again.")
-            print("Are you ready to open and leave the hibernation pod? "
-                  "[y/n]\n")
         else:
             print("\nInvalid input. Please choose either yes/y or no/n")
             print('You can end the game by typing "end"')
@@ -296,6 +308,7 @@ def the_end_message():
           "chapter.")
     print("Stay tuned for future possible updates and sequels to this "
           "thrilling journey through the unknown.")
+    restart_game_choice()
 
 
 def outer_space():
@@ -305,10 +318,8 @@ def outer_space():
     After putting on the space suit in the Airlock the user can decide
     to exit the space ship and explore the outside of it.
     """
-    global cut_state, nav_threat
-
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     print("As you step outside the Airlock, you are immediately struck"
           " by the breathtaking view of the cosmos. Countless stars "
@@ -404,10 +415,10 @@ def airlock():
     If the navigation system error is active, they will have a mission,
     otherwise they will meet their end.
     """
-    global cut_state, nav_threat
+    global nav_threat
 
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     if space_suit is True:
         print("You approach the Airlock hatch and secure your spacesuit.")
@@ -468,10 +479,8 @@ def engineering_bay():
     The user can choose to explore the Engineering Bay or continue
     on their way to explore the rest of the ship.
     """
-    global cut_state
-
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     def engineering_bay_path_choice():
         """
@@ -480,10 +489,10 @@ def engineering_bay():
         The user can choose stay insideof the engineering bay and continue to "
         "explore orleave towards the Airlock, and continue the story."
         """
-        global cut_state, space_suit, nav_threat
+        global space_suit, nav_threat
 
-        cut_state = bleeding_wound(cut_state)
-        # Updates the cut_state
+        player_health.take_damage()
+    # Updates the health state
 
         print("As you head on out to leave you stop for a second.")
 
@@ -777,10 +786,10 @@ def escape_pods_lift_ending():
     The user can choose to leave the Control Room across the room towards
     the Engineering Bay or to use a lift to go down into Escape Pods.
     """
-    global cut_state, nav_threat
+    global nav_threat
 
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     if nav_threat > 0:
         nav_threat = navigation_failure(nav_threat)
@@ -809,11 +818,10 @@ def escape_pods():
     The user can choose to save themselves or use a lift and go back into
     Cargo Hold and continue to explore the rest of the ship.
     """
-    global cut_state, nav_threat
+    global nav_threat
 
-    global cut_state
-    if bleeding is False:
-        clear()
+    player_health.take_damage()
+    # Updates the health state
 
     print("Only few seconds pass before the elevator stops.\n")
     print("The doors swing open, and you find yourself in a state "
@@ -822,9 +830,6 @@ def escape_pods():
           "each with its own unique design, waiting to be explored.\n"
           "The soft, pulsating glow of their control panels and the "
           "promise of safety within them beckon you closer.")
-
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
 
     if navigation_error is True:
         print("\nYou can't help but remember the unsettling navigation error "
@@ -917,10 +922,10 @@ def cargo_hold_path_choice():
     The user can choose to leave the Control Room across the room towards
     the Engineering Bay or to use a lift to go down into Escape Pods.
     """
-    global cut_state, nav_threat, broken_vase
+    global nav_threat, broken_vase
 
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     print("\nAs you start to leave, a large Egyptian vase falls in "
           "the distance. \nYou jump, startled out of your mind, you "
@@ -979,11 +984,10 @@ def cargo_hold():
     After a user reaches Control Room they can choose to explore the Cargo
     Hold, or continue on exploring the ship.
     """
-    global cut_state, nav_threat
+    global nav_threat
 
-    global cut_state
-    if bleeding is False:
-        clear()
+    player_health.take_damage()
+    # Updates the health state
 
     print("\nAs you continue your exploration, you eventually reach "
           "the massive Cargo Hold.\n")
@@ -991,9 +995,6 @@ def cargo_hold():
           "boxes, vital supplies, sturdy containers, various vehicles, "
           "reserves of fuel, an assortment of spare parts, live animal "
           "specimens in their own special cryo-hibernation chambers and more.")
-
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
 
     while True:
         cargo_hold_options = input("\nWhich part of the Cargo Hold "
@@ -1087,7 +1088,7 @@ def control_room_choose_path():
     User is located in the Control Room and needs
     to choose which way they would like to continue going.
     """
-    global cut_state, nav_threat
+    global nav_threat
     print("You find yourself at the cross section.")
 
     while True:
@@ -1099,22 +1100,27 @@ def control_room_choose_path():
             restart_game_choice()
 
         if control_path_choice == "a" or control_path_choice == "left":
+            player_health.take_damage()
+            # Updates the health state
             print("\nYou head left towards the Cargo Hold.")
-            cargo_hold()
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
+
             if nav_threat > 0:
                 nav_threat = navigation_failure(nav_threat)
                 # Updates the navigation threat
 
+            cargo_hold()
+
         elif control_path_choice == "b" or control_path_choice == "right":
+            player_health.take_damage()
+            # Updates the health state
+
             print("\nYou head right towards the Engineering Bay. Wondering"
                   " what might you find there.")
-            cut_state = bleeding_wound(cut_state)
-            # Updates the cut_state
+
             if nav_threat > 0:
                 nav_threat = navigation_failure(nav_threat)
                 # Updates the navigation threat
+
             engineering_bay()
 
         else:
@@ -1132,13 +1138,10 @@ def control_room():
     everyone on the spaceship by fixing the navigation system manually
     by leaving through the airlock.
     """
-    global cut_state, nav_threat
+    global nav_threat
 
-    if bleeding is False:
-        clear()
-
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     print("\nYou reach the Control Room.")
     print("You are fascinated by all of the screens "
@@ -1186,7 +1189,6 @@ def healing_procedure():
     and decides to try using the Regenesis Chamber 3000. It updates
     the bleeding variable to False to disable the bleeding_wound function.
     """
-    global bleeding
 
     print("\nScanning the wound...\n")
     print("Decontamination...\n")
@@ -1194,7 +1196,9 @@ def healing_procedure():
     print("Cellular Rejuvenation...\n")
     print("Healing complete\n".upper())
     print("Specimen returned to optimum health.\n")
-    bleeding = False
+    player_health.bleeding = False
+    # Set bleeding back to False
+    # Stops any damage effect active
 
 
 def forceful_healing_procedure():
@@ -1226,15 +1230,12 @@ def med_bay_choose_path():
     The user can choose to continue exploring the spaceship and continue
     moving through the rest of the rooms left to explore.
     """
-    global cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     print("You walk through the Med Bay exploring.")
     print("You pass around the Regenesis Chamber 3000 and "
           "reach two corridors.\n")
-
-    cut_state = bleeding_wound(cut_state)
-
-    # Updates the cut_state
 
     while True:
         print("To your left you can see the long winding corridor "
@@ -1341,12 +1342,8 @@ def med_bay():
     heal their wound and stop the bleeding if they were damaged at the start
     or they can continue with their exploration of the spaceship.
     """
-    global cut_state
-    if bleeding is False:
-        clear()
-
-    cut_state = bleeding_wound(cut_state)
-    # Updates the cut_state
+    player_health.take_damage()
+    # Updates the health state
 
     print("You enter the Med Bay. Straight away you notice "
           "all of the medical supplies. You are mesmerised "
@@ -1391,10 +1388,9 @@ def med_bay():
             med_bay_choose_path()
 
         elif healing_chamber == "n" or healing_chamber == "no":
+            player_health.take_damage()
+            # Updates the health state
             med_bay_choose_path()
-            if cut_state > 0:
-                cut_state = bleeding_wound(cut_state)
-                # Updates the cut_state
 
         else:
             print("\nInvalid input. Please choose either yes/y or no/n")
