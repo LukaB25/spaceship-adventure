@@ -1,7 +1,29 @@
-import os
+import os                      # Import to enable terminal clear
+import gspread                 # Import gspread for google sheets
+from google.oauth2.service_account import Credentials    # access
 from datetime import datetime  # Import for date and time
 import pytz                    # Import for timezones
 import random                  # Import for randomness
+
+SCOPE = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/drive"
+    ]
+
+CREDS = Credentials.from_service_account_file('creds.json')
+SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+SHEET = GSPREAD_CLIENT.open('spaceship_adventure')
+
+victims = SHEET.worksheet('victims')
+survivors = SHEET.worksheet('survivors')
+
+victims_data = victims.get_all_values()
+survivors_data = survivors.get_all_values()
+
+print(victims_data)
+print(survivors_data)
 
 # Date and time
 # Gets and extracts current date and time for Dublin
@@ -1507,5 +1529,5 @@ def main():
     open_hibernation_pod()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
