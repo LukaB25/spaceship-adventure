@@ -112,7 +112,7 @@ class NavigationFailure:
                 print("\nNavigation failure! Critical state "
                       "is imminent. "
                       f"\nThreat Level: |{'█' * self.nav_threat}"
-                      f"{'_' * 100}|  "
+                      f"{'_' * (100 - self.nav_threat)}|  "
                       f"{self.nav_threat}%")
                 print("Manual reboot necessary.\n")
             else:
@@ -315,14 +315,14 @@ def the_end_message():
     Offers an open ending with a possibility of expanding the game or
     creating a sequel in the future.
     """
-    print("As you contemplate the vastness of space and your uncertain "
+    print("\nAs you contemplate the vastness of space and your uncertain "
           "journey, you realize that every choice you made has "
-          "consequences.")
+          "consequences.\n")
     if navigation_fault.nav_threat > 0:
         print("The fate of the mission and its crew now rests in your hands.")
         print("You've overcome adversity, saved the mission from disaster, "
               "and made tough decisions. But the mysteries of space remain,"
-              " and your story is far from over.")
+              " and your story is far from over.\n")
         if bypass_system is True:
             print("The ship, now set on an unknown path, drifting through the "
                   "cosmos.")
@@ -330,16 +330,19 @@ def the_end_message():
         print("You think about how far you have already come and the great "
               "distance you traveled to get to here. And you can't help but"
               " smile at the thought of everything that awaits you on your "
-              "new planet Terra Novus, with all of the fellow travellers.")
+              "new planet Terra Novus, with all of the fellow travellers.\n")
     print("The future is still uncertain, but one thing is clear: your "
           "journey has only just begun.")
-    print("Thank you for playing this adventure. The possibilities are "
+    print("\nThank you for playing this adventure. The possibilities are "
           "endless, and the story can continue in many directions. Will you "
           "wander deeper into space, face more challenges, or perhaps return"
           " to your home planet? The choice is yours to make in the next "
-          "chapter.")
+          "chapter.\n")
     print("Stay tuned for future possible updates and sequels to this "
           "thrilling journey through the unknown.")
+    print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
+          "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
+          "╬█╬ █╬█ █▄ ╬╬ █▄ █╬██ ███\n")
     restart_game_choice()
 
 
