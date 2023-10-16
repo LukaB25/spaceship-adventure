@@ -78,9 +78,6 @@
 
 ## Features
 
-### Style
-- To add some style to the site I copied the base html code for the Heroku app and made some changes to HTML and CSS setting to change the colours and background picture of the site to fit with my project.
-
 ### Google sheets
 
 #### Download
