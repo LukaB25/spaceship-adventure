@@ -570,7 +570,9 @@ def start_game_message():
 
     # Provide information on game features and controls.
     print('\nIn case you want to check out the scoreboards, you can do so by '
-          'typing "progress" or "scores" at any point through the game.')
+          'typing "progress" or "scores" at any point through the game. \n'
+          'Once you reach one of possible nine endings to the story your '
+          'progress will be automatically saved.')
     print('If for any reason you decide to end the game, you can do so by '
           'writing "end" into any input field at any stage of the game.\n')
 
