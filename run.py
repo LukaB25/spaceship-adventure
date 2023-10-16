@@ -183,7 +183,9 @@ def end_game():
     Ends the game as part of user's choices to restart teh game or not.
     """
     print("Thank you for playing.")
-    print("Good Luck on your future voyage.")
+    print("\nCreated by: Luka Black")
+    print("As a project for Code Institute.")
+    print("\nGood Luck on your future voyage.")
     quit()
 
 
