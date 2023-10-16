@@ -30,7 +30,7 @@
 ### ASCII art images
 
 - The game contains couple of ASCII art and signs to offer better experience to the user
-![ASCII Rocket image and SpaceShip Adventure logo sign](images/lucid_mind_map.avif)
+![ASCII Rocket image and SpaceShip Adventure logo sign](images/spaceship_adventure_ascii_art.avif)
 - The rocket image was taken from [TextArt](https://textart.sh/topic/rocket), and improved on to have desired design.
 - The sign was created and taken from [TextArtGenerator](https://www.textartgenerator.net/), and combined with the rocket image.
 
@@ -91,6 +91,8 @@
 
 ### Features left to implement
 
+- separate handler if user doesn't activate bleeding or navigation error, but puts on a space suit before exiting the spaceship. Missing ending handling
+
 ***Future features:***
 - More ASCII art
 - Expand possible endings, especially surviving endings
@@ -102,6 +104,51 @@
 - ...
 
 ## Testing
+
+|           Action            |        Expectation                           | Outcome |
+| :-------------------------: |   :-------------------------------------:    | :-----: |
+|           Game start        |   The game starts when program is run        |  Pass   |
+|      Terminal clears        |         Any old messages are cleared         |  Pass   |
+|       ASCII image and sign  |         ASCII image loads properly           |  Pass   |
+|       Username input        |  Username input shows, waits for input       |  Pass   |
+|  Username input/whitespace  | If only whitespace is enetered- error msg    |  Pass   |
+|  Username input/numbers     |  If only numbers are enetered- error msg     |  Pass   |
+|  Username input -correct    |    If name is entered it lets user pass      |  Pass   |
+|       Features message      |  Provide information on game features        |  Pass   |
+|    Story information        |    Provide information on storyline          |  Pass   |
+|          Input "end"        | Offers user a choice to restart or end game  |  Pass   |
+|   Input "progress"/"score"  | Display the scoreboard of victims/survivors  |  Pass   |
+|    Leave hibernation pod    | If "no" writes message and loops back again  |  Pass   |
+|          Grab door          |      Gets away safely without any damage     |  Pass   |
+|    Grab cord           |   Grabbed electical cord, got electricuted. Died  |  Pass   |
+|      Risk fall      | starts bleeding effect on fall from hibernation pod  |  Pass   |
+|   Input - answer      | Progresses through the story depending on choice   |  Pass   |
+|    Control room  |   Can choose to explore or continue through the ship.   |  Pass   |
+|  Examine control panel  | activates navigation error on explore selection  |  Pass   |
+|    Continue past control panel    |    Continues the story with no error   |  Pass   |
+|   Control room choice     |    can go to Cargo Hold or Engineering Bay     |  Pass   |
+|    Cargo Hold  |  can explore or continue on to escape pods or engineering |  Pass   |
+|    Escape Pods |  Can use escape pod or go back to cargo hold via old lift |  Pass   |
+|    Escape   |    Saved themselves, left everyone else behind, Survived     |  Pass   |
+|    Go back/old lift   |    The lift malfunctions and kills player, dead    |  Pass   |
+|   Med Bay/not hurt    |  Gets scanned and nothing happens, story continues |  Pass   |
+|  Med Bay/hurt/heal      |    Gets scanned, not wounded, healed, continue   |  Pass   |
+| Med Bay/hurt/don't heal |    Scanned, wonded, refused heal, forced heal    |  Pass   |
+|   Forced healing   |    Error occurs and the machine killes player, dead   |  Pass   |
+|  Med Bay Path choice        |     can go to Library or Observation Deck    |  Pass   |
+|     Explore Library  |  Looks around, finds open book, sees shadow person  |  Pass   |
+| Explore Observation Deck |   Looks around, can go on or go back to Med Bay |  Pass   |
+|    Engineering Bay    |    Can explore the engineering bay or continue     |  Pass   |
+|   Explore engineering  |   Discovers a lot of nice and interesting stuff   |  Pass   |
+|   Engineering continue  |       Can stay or continue into Airlock          |  Pass   |
+|        Airlock      |        can choose to put on space suit or not        |  Pass   |
+|   Space suit/not on  | Step into airlock, realise mistake but too late, died  |  Pass   |
+|  Space suit/on  |  Step into airlock and exit outside the ship. Runs through scenario and ends if the navigation error is not active, otherwise continue. Survived |  Pass   |
+|   Space suit/on nav. error    |  Continues the story and makes player choose to either fix navigation failure with reboot code provided at start or bypass system  |  Pass   |
+|   Master Reboot   |    If reboot code correct, runs special ending scene, survived     |  Pass   |
+|   System bypass  |    Runs the ending scene, without master reboot, future uncertain, survived     |  Pass   |
+|   Restart on game end   |    Offers to restart the game from beginning     |  Pass   |
+
 
 ## Troubleshooting
 

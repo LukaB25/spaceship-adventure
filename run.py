@@ -9,7 +9,7 @@ import random                  # Import for randomness
 # Sets up Google Sheets API authentication, connect and access the
 # 'spaceship_adventure' spreadsheet, and retrieve data from 'victims'
 # and 'survivors' worksheets.
-# Used Code Institute lesson to create the gs gpread
+# Used Code Institute lesson to create the gspread
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -783,19 +783,20 @@ def outer_space():
     # Updates the health state
     player_health.take_damage()
 
-    print("As you step outside the Airlock, you are immediately struck"
+    print("\nAs you step outside the Airlock, you are immediately struck"
           " by the breathtaking view of the cosmos. Countless stars "
           "twinkle in the distance, and you're surrounded by the void of"
           " space.")
-    print("The silence is eerie, and you feel a strange mix of awe and"
+    print("\nThe silence is eerie, and you feel a strange mix of awe and"
           " vulnerability.")
 
     # If there's a navigation fault, guide the player to the navigation panel
     if navigation_fault is True:
-        print("After a few minutes of floating through the emptiness of"
+        print("\nAfter a few minutes of floating through the emptiness of"
               " space, you head to find the navigation panel. As you "
-              "finally reach the designated area. The navigation reboot panel"
-              " is in sight, and it's your only hope to set things right.")
+              "finally reach the designated area. \nThe navigation reboot "
+              "panel is in sight, and it's your only hope to set things "
+              "right.")
         print("You follow the instructions step by step and reach the reboot "
               "panel. You open it and notice that the power source seems to "
               "be malfunctioning, which is likely the cause of the ship's "
@@ -842,17 +843,17 @@ def outer_space():
                     if reboot_code_input == reboot_code:
                         print("You are in, the reboot code was correct! "
                               "\nWell done!!")
-                        print("You carefully start repairing the power source."
-                              " After some time and with your steady hands, "
-                              "you manage to fix it. The navigation system "
-                              "comes back online, and the ship's trajectory "
-                              "is corrected.")
-                        print("Congratulations! You've successfully saved the "
-                              "mission, and the ship is now back on track. "
-                              "\nThe travellers will one day find out about "
-                              "your heroics and appreciate everything you did "
-                              "for them, complete strangers, on this faraway "
-                              "voyage into unknown.")
+                        print("\nYou carefully start repairing the power "
+                              "source. After some time and with your steady"
+                              " hands, you manage to fix it. The navigation "
+                              "system comes back online, and the ship's "
+                              "trajectory is corrected.")
+                        print("\nCongratulations! You've successfully saved "
+                              "the mission, and the ship is now back on "
+                              "track. \nThe travellers will one day find out "
+                              "about your heroics and appreciate everything "
+                              "you did for them, complete strangers, on this"
+                              " faraway voyage into unknown.")
                         the_end_message()
                     # Handles incorrect input and continues with the loop
                     else:
@@ -860,8 +861,8 @@ def outer_space():
                         reboot_attempt += 1
                 # Handles outcome when maximum attempts are crossed
                 else:
-                    print("Maximum number of attempts reached. The navigation "
-                          "malfunction remains unrepaired.")
+                    print("\nMaximum number of attempts reached. The "
+                          "navigation malfunction remains unrepaired.")
                     if navigation_fault.nav_threat > 0:
                         navigation_fault.navigation_failure()
                         # Updates the navigation threat
@@ -869,15 +870,15 @@ def outer_space():
             # Handles player's choice to bypass the power source
             elif outer_space_choice == "b" or outer_space_choice == "bypass":
                 clear()
-                print("You decide to bypass the malfunctioning power source as"
-                      " it's too risky to repair it without proper tools. "
+                print("\nYou decide to bypass the malfunctioning power source "
+                      "as it's too risky to repair it without proper tools. "
                       "\nThe navigation system reboots, but you notice that "
                       "the course is set for an unknown destination.")
-                print("You have a sinking feeling that your actions might have"
-                      " dire consequences, but for now, you've successfully "
-                      "fixed the immediate issue. The future of the mission "
-                      "remains uncertain.")
-                print("We are on an unknown path now, we will weave our own"
+                print("\nYou have a sinking feeling that your actions might "
+                      "have dire consequences, but for now, you've "
+                      "successfully fixed the immediate issue. The future of "
+                      "the mission remains uncertain.")
+                print("\nWe are on an unknown path now, we will weave our own"
                       " destiny.")
                 print("Maybe one day we will manage to get to our planet "
                       "Terra Novus, but for now we will drift through space,"
@@ -889,8 +890,8 @@ def outer_space():
 
             # Handles incorrect input and continues with the loop
             else:
-                print("You're paralyzed by the weight of the decision. Time is"
-                      " running out. The navigation system awaits your "
+                print("\nYou're paralyzed by the weight of the decision. Time "
+                      "is running out. The navigation system awaits your "
                       "choice.")
                 print("Invalid input, your choices are [a]repair or [b]bypass")
                 print('You can end the game by typing "end"')
@@ -913,12 +914,12 @@ def airlock():
     # Checks the space_suit state and runs through the scenario depaning
     # on the space_suit state
     if space_suit is True:
-        print("You approach the Airlock hatch and secure your spacesuit.")
+        print("\nYou approach the Airlock hatch and secure your spacesuit.")
         print("The hatch opens smoothly, and you step into the airlock "
               "chamber.")
         print("You feel the rush of air leaving the chamber as it "
               "depressurizes.")
-        print("Once the process is complete, the outer airlock door opens, "
+        print("\nOnce the process is complete, the outer airlock door opens, "
               "revealing the vastness of space.")
         print("You're now ready to continue your journey into the unknown.")
 
@@ -932,20 +933,20 @@ def airlock():
     # Runs a scenario where player didn't put on the space suit and handles
     # its outcome
     else:
-        print("You approach the Airlock hatch and begin to turn the "
+        print("\nYou approach the Airlock hatch and begin to turn the "
               "wheel to open it. The hatch, however, seems much"
               " heavier than expected.\n")
-        print("With a lot of effort, you manage to turn the wheel "
+        print("\nWith a lot of effort, you manage to turn the wheel "
               "and start opening the hatch, but as you do, you feel"
               " the air pressure in the chamber drop rapidly. The "
               "alarm sirens begin to blare, and you realize your "
               "mistake.\n")
-        print("The airlock chamber starts depressurizing rapidly,"
+        print("\nThe airlock chamber starts depressurizing rapidly,"
               " causing extreme discomfort as you struggle to "
               "breathe. Panic sets in as you realize you won't "
               "survive in the vacuum of space without a "
               "spacesuit.\n")
-        print("Desperation takes over as you scramble to put on the "
+        print("\nDesperation takes over as you scramble to put on the "
               "nearby spacesuit, but it's too late. The airlock door "
               "to space opens, and you're sucked out into the cold, "
               "unforgiving void.\n")
@@ -953,12 +954,12 @@ def airlock():
         # Checks if the shadow_figure is true and displays additional
         # message for the story continuation
         if shadow_figure is True:
-            print("As you slowly freeze and your vision darkens, the"
+            print("\nAs you slowly freeze and your vision darkens, the"
                   "very last thing you see is a dark shadow looming "
                   "over you.\n")
             print("You can't make out any features, just a vague, "
                   "unsettling silhouette.")
-            print("Fear and regret wash over you as you wonder who "
+            print("\nFear and regret wash over you as you wonder who "
                   "or what this shadow is and why it's watching you"
                   " in your final moments. But it's too late, and your"
                   " consciousness fades into nothingness in the void "
@@ -1080,8 +1081,8 @@ def engineering_bay():
                       "head, maybe you will encounter them, to ask them all"
                       " those questions, but for now you decide to continue"
                       " on your way.")
-                print("You step in front of the sealed door that leads to the "
-                      "Airlock, press your palm against the sensor lock")
+                print("\nYou step in front of the sealed door that leads to "
+                      "the Airlock, press your palm against the sensor lock")
                 print("The sensor beeps, opening the door with a soft hiss of "
                       "compressed air. As you step through the threshold, you"
                       " find yourself in a small room with another door at the"
