@@ -476,19 +476,24 @@ def restart_game_choice():
     If user decides to end the game, the game will print the end game
     message and quit the program.
     """
-    restart_choice = input("\nDo you want to restart the game from the"
-                           " beginning? \n[y]yes \n[n]no \n[]type "
-                           "anything to cancel\n> ").lower()
+    while True:
+        restart_choice = input("\nDo you want to restart the game "
+                               "from the beginning? \n[y]yes \n[n]no "
+                               "\n> ").lower()
 
-    # Restarts the game if player selects yes/y
-    if restart_choice == "y" or restart_choice == "yes":
-        print("\nRestarting game...\n")
-        restart_game()
+        # Restarts the game if player selects yes/y
+        if restart_choice == "y" or restart_choice == "yes":
+            print("\nRestarting game...\n")
+            restart_game()
 
-    #  Ends game completely if player selects no/n
-    elif restart_choice == "n" or restart_choice == "no":
-        print("\nEnding the game...")
-        end_game()
+        #  Ends game completely if player selects no/n
+        elif restart_choice == "n" or restart_choice == "no":
+            print("\nEnding the game...")
+            end_game()
+        else:
+            print("\nInvalid input. You can either choose [y]yes to "
+                  "Restart the game or [n]no to End the game.")
+            print(f'\nYou typed in "{restart_choice}"\n')
 
 
 def start_game_message():

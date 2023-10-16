@@ -220,6 +220,7 @@
 - Fixed error message that was showing up when scoreboard was accessed, the issue was happening because the input response was not connected as an elif statement variation, but as a separate if statement which was activating the else method everytime input was put in.
 - Corrected the bleeding effect, by using a proper method of assignment, added a set_bleeding_state function to control whether the statement is True or False
 - Added another message to error handler to print a message on how to access scoreboard.
+- Discovered error where a restart choice offered the way to break the game by typing in anything but provided choices that would let the game continue, because there was no while loop on the restart_game_choice function. Fixed the error by creating the while loop
 
 ### Unfixed bugs:
 
