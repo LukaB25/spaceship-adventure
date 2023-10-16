@@ -113,9 +113,11 @@
 
 ### Unfixed bugs:
 
+- As far as I am aware, there are no unfixed bugs.
+
 ## Validator testing
 
-### Performance
+- I ran an internal testing using pycodestyle and no errors were returned or found.
 
 ## Deployment
 
@@ -138,5 +140,10 @@
 
 ### Media
 
+- The rocket image was taken from [TextArt](https://textart.sh/topic/rocket), and improved on to have desired design.
+- The SpaceShip Adventure, The End and Scoreboard signs were created and taken from [TextArtGenerator](https://www.textartgenerator.net/)
+
 ### Content
 
+- Few lines of code were taken from[StackOverflow](https://stackoverflow.com/questions/72047933/accessing-a-value-by-index-in-enumerate-for-loop)
+- Starting steps and few lines of code came from  lessons and Love Sandwiches
