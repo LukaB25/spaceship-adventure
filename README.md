@@ -8,7 +8,7 @@
 - There are multiple ways to survive, but also to die. The game will keep track of all of the users and the progress they made by storing the data inside of google sheets.
 
 ## Wireframes - [Lucid](https://lucid.app/)
-![Lucid basic game progress mind map](images/lucid_mind_map.avif)
+![Lucid basic game progress mind map](assets/images/lucid_mind_map.avif)
 ### Mind map
 - The mind map is just a basic starting plan that was used to plan out the progress of the game
 
@@ -78,6 +78,9 @@
 
 ## Features
 
+### Style
+- To add some style to the site I copied the base html code for the Heroku app and made some changes to HTML and CSS setting to change the colours and background picture of the site to fit with my project.
+
 ### Google sheets
 
 #### Download
@@ -90,7 +93,7 @@
 ### ASCII art images
 
 - The game contains couple of ASCII art and signs to offer better experience to the user
-![ASCII Rocket image and SpaceShip Adventure logo sign](images/spaceship_adventure_ascii_art.avif)
+![ASCII Rocket image and SpaceShip Adventure logo sign](assets/images/spaceship_adventure_ascii_art.avif)
 - The rocket image was taken from [TextArt](https://textart.sh/topic/rocket), and improved on to have desired design.
 - The sign was created and taken from [TextArtGenerator](https://www.textartgenerator.net/), and combined with the rocket image.
 
