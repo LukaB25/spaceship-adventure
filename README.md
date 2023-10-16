@@ -91,9 +91,25 @@
 
 ### Features left to implement
 
+***Future features:***
+- More ASCII art
+- Expand possible endings, especially surviving endings
+- Add more backstory and post saving the ship storyline
+- Discovery of the shadow figure
+- In debth exploration of each room on the ship
+- Addition of new rooms
+- Continuation to the mystery old computer story by adding games within game to it
+- ...
+
 ## Testing
 
 ## Troubleshooting
+
+- During the build process I encountered some errors that I managed to fix by watching some tutorials and looking up online issues I encountered.
+- One of the issues I had as I started coding, was the fact that I didn't understand what do I need to put around my line of code if it is going into the second row, after a little bit of googling and searching I found out that all I had to do was wrap each line in "".
+- I had an error with an infinite loop in control_room() which I corrected after discovering I haven't created a while loop correctly, as I forgot to input the break keyword in my if statements, so the output couldn't reach the control_room_choice_path() function outside the while loop
+- I had couple of small errors due to not closing parentheses or the spacing being 4 spaces..
+- I struggled and it took me quite a while, watching love sandwiches and looking up online to find a proper way to import and export the values to the and from the google sheets.
 
 ### Unfixed bugs:
 
@@ -104,6 +120,21 @@
 ## Deployment
 
 ## Credits
+
+- Prior to starting with the project I watched multiple video tutorials for inspiration and guidance, some of which are:
+- [Shaun Halverson](https://www.youtube.com/watch?v=ORsJn-71__0&t=90s)
+- [LeMaster Tech](https://www.youtube.com/watch?v=u8X6TiJA8as&t=273s)
+- [Dante Lee](https://www.youtube.com/watch?v=lI6S2-icPHE&t=144s)
+- [Tech With Tim](https://www.youtube.com/watch?v=DEcFCn2ubSg&t=107s)
+- [Programming with Mosh](https://www.youtube.com/watch?v=kqtD5dpn9C8)
+- [Programming with Mosh](https://www.youtube.com/watch?v=_uQrJ0TkZlc&t=7s)
+- [Tech With Tim](https://www.youtube.com/watch?v=p15xzjzR9j0)
+- [Free Code Camp](https://www.freecodecamp.org/news/how-to-get-the-current-time-in-python-with-datetime/#:~:text=of%20the%20datetime.-,now()%20Function,second%20of%20the%20current%20date.)
+- [CodeInstitute Lessons](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+LS101+2021_T1/courseware/293ee9d8ff3542d3b877137ed81b9a5b/58d3e90f9a2043908c62f31e51c15deb/)
+- [Real Python](https://realpython.com/python-enumerate/)
+
+- [Taylor Swift playlist](https://www.youtube.com/watch?v=IdneKLhsWOQ&list=PLMEZyDHJojxNYSVgRCPt589DI5H7WT1ZK) and countless hours of music playlists that kept me company
+
 
 ### Media
 

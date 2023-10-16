@@ -9,6 +9,7 @@ import random                  # Import for randomness
 # Sets up Google Sheets API authentication, connect and access the
 # 'spaceship_adventure' spreadsheet, and retrieve data from 'victims'
 # and 'survivors' worksheets.
+# Used Code Institute lesson to create the gs gpread
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
