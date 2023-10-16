@@ -203,7 +203,7 @@ def request_username():
 
         # Returns username only if input is not empty
         # Prevents using only whitespace
-        if (username and not username.isspace() and not
+        elif (username and not username.isspace() and not
                 username.isnumeric()):
             return username
 
@@ -211,10 +211,14 @@ def request_username():
         elif username.isnumeric():
             print("\nUsername cannot consist of only numbers. Please "
                   "try again.")
+
+        # Handles incorrect input
         else:
             print("\nUsername cannot be empty or consist of only whitespace."
                   "Please try again.")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
 
 
 class HealthState:
@@ -226,11 +230,17 @@ class HealthState:
     """
     def __init__(self):
         """
-        Initialize the player's health state with 100 health
+        Initialize the player's health state with 50 health
         and no bleeding effect.
         """
-        self.health = 100
+        self.health = 50
         self.bleeding = False
+
+    def set_bleeding_state(self, bleeding):
+        """
+        Sets player's bleeding status.
+        """
+        self.bleeding = bleeding
 
     def take_damage(self):
         """
@@ -238,14 +248,14 @@ class HealthState:
         If the player's health reaches zero, the player dies.
         """
         if self.bleeding:
-            damage_amount = 20
+            damage_amount = 10
             self.health -= damage_amount
             if self.health <= 0:
                 # Player reached critical state and didn't reach the
                 # Med Bay.
                 print(f"\nYou reached critical state. "
                       "You didn't reach Med Bay.")
-                print(f"Health state: |{'_' * 100}| 0% X___X")
+                print(f"Health state: |{'_' * 50}| 0% X___X")
                 print("You died.\n")
                 print("\n███ █╬█ ██ ╬╬ ██ █╬╬█ ██▄\n"
                       "╬█╬ █▄█ █▄ ╬╬ █▄ ██▄█ █╬█\n"
@@ -269,8 +279,8 @@ class HealthState:
                       "find some bandages quickly.")
                 print(f"You are hurt, reach the Med Bay.\n")
                 print(f"Health state: |{'█' * self.health}"
-                      f"{'_' * (100 - self.health)}| "
-                      f"{self.health}% *___*")
+                      f"{'_' * (50 - self.health)}| "
+                      f"{self.health * 2}% *___*")
 
 
 class NavigationFailure:
@@ -297,21 +307,21 @@ class NavigationFailure:
         If the threat level becomes critical, the game over handling is called.
         """
         if self.navigation_error:
-            threat_amount = 20
+            threat_amount = 10
             self.nav_threat += threat_amount
-            if self.nav_threat <= 40:
+            if self.nav_threat <= 20:
                 print("\nNavigation failure! Approaching a critical "
                       "level."
                       f"\nThreat Level: |{'█' * self.nav_threat}"
-                      f"{'_' * (100 - self.nav_threat)}|  "
-                      f"{self.nav_threat}%")
+                      f"{'_' * (50 - self.nav_threat)}|  "
+                      f"{self.nav_threat * 2}%")
                 print("Manual reboot necessary.\n")
-            elif self.nav_threat <= 80:
+            elif self.nav_threat <= 40:
                 print("\nNavigation failure! Critical state "
                       "is imminent. "
                       f"\nThreat Level: |{'█' * self.nav_threat}"
-                      f"{'_' * (100 - self.nav_threat)}|  "
-                      f"{self.nav_threat}%")
+                      f"{'_' * (50 - self.nav_threat)}|  "
+                      f"{self.nav_threat * 2}%")
                 print("Manual reboot necessary.\n")
             else:
                 self.handle_game_over()
@@ -467,10 +477,15 @@ def restart_game_choice():
     message and quit the program.
     """
     restart_choice = input("\nDo you want to restart the game from the"
-                           " beginning? \n[y]yes \n[n]no \n> ").lower()
+                           " beginning? \n[y]yes \n[n]no \n[]type "
+                           "anything to cancel\n> ").lower()
+
+    # Restarts the game if player selects yes/y
     if restart_choice == "y" or restart_choice == "yes":
         print("\nRestarting game...\n")
         restart_game()
+
+    #  Ends game completely if player selects no/n
     elif restart_choice == "n" or restart_choice == "no":
         print("\nEnding the game...")
         end_game()
@@ -611,16 +626,6 @@ def fall_choice():
                               "[b] grab a cord hanging from the ceiling \n"
                               "[c] risk injury from the fall \n> ").lower()
 
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if fall_decision == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if fall_decision == "progress" or fall_decision == "score":
-            show_progress_score()
-
         # Player grabs the pod door and continues
         if fall_decision == "a":
             print("\nYou managed to grab onto the pod door")
@@ -657,17 +662,30 @@ def fall_choice():
 
             # Sets bleeding to True and starts inflicting damage to the
             # player each time take_damage is called while True
-            player_health.bleeding = True
+            bleeding = True
+            player_health.set_bleeding_state(bleeding)
             player_health.take_damage()
 
             print("You start exploring the room.\n")
 
             choose_path(fall_decision)
 
+        # Runs show_progress_score if user types in "progress" or "score" which
+        # displays the scoreboard
+        elif fall_decision == "progress" or fall_decision == "score":
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers them to
+        # start from the beginning or to end the program
+        elif fall_decision == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("\nInvalid input. Try again.")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{fall_decision}"\n')
 
 
@@ -682,16 +700,6 @@ def open_hibernation_pod():
                            "hibernation pod? \n[y]yes "
                            "\n[n]no\n> ").lower()
 
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if pod_choice == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        #  displays the scoreboards
-        if pod_choice == "progress" or pod_choice == "score":
-            show_progress_score()
-
         # Handles player's choice to leave the hibernation pod
         if pod_choice == "yes" or pod_choice == "y":
             print("\nWith a little bit of struggle, the pod creaks open.")
@@ -705,10 +713,22 @@ def open_hibernation_pod():
             print("(-, –)｡｡zZ💤💤💤\n")
             print("Let's try again.")
 
+        # Runs show_progress_score if user types in "progress" or "score" which
+        # displays the scoreboard
+        elif pod_choice == "progress" or pod_choice == "score":
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers them to
+        # start from the beginning or to end the program
+        elif pod_choice == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("\nInvalid input. Please choose either [y]yes or [n]no")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{pod_choice}"\n')
 
 
@@ -808,17 +828,6 @@ def outer_space():
                                        "repair the power source "
                                        "\n[b]bypass it \n> ").lower()
 
-            # Runs restart_game_choice if user types in "end" which offers
-            # them to start from the beginning or to end the program
-            if outer_space_choice == "end":
-                restart_game_choice()
-
-            # Runs show_progress_score if user types in "progress" or "score"
-            # which displays the scoreboard
-            if (outer_space_choice == "progress" or
-                    outer_space_choice == "score"):
-                show_progress_score()
-
             # Handles player's choice to repair the power source
             if outer_space_choice == "a" or outer_space_choice == "repair":
                 reboot_attempt = 0
@@ -888,6 +897,17 @@ def outer_space():
                 # Runs through the end scenario where player survived
                 the_end_message()
 
+            # Runs show_progress_score if user types in "progress" or "score"
+            # which displays the scoreboard
+            elif (outer_space_choice == "progress" or
+                  outer_space_choice == "score"):
+                show_progress_score()
+
+            # Runs restart_game_choice if user types in "end" which offers them
+            # to start from the beginning or to end the program
+            elif outer_space_choice == "end":
+                restart_game_choice()
+
             # Handles incorrect input and continues with the loop
             else:
                 print("\nYou're paralyzed by the weight of the decision. Time "
@@ -895,6 +915,8 @@ def outer_space():
                       "choice.")
                 print("Invalid input, your choices are [a]repair or [b]bypass")
                 print('You can end the game by typing "end"')
+                print('You can check the scoreboard by typing "progress"'
+                      ' or "score"')
                 print(f'\nYou typed in "{outer_space_choice}"\n')
     else:
         the_end_message()
@@ -1014,17 +1036,6 @@ def engineering_bay():
                                                  "\n[b]leave to explore the "
                                                  "Airlock\n> ").lower()
 
-            # Runs restart_game_choice if user types in "end" which offers
-            # them to start from the beginning or to end the program
-            if engineering_bay_path_options == "end":
-                restart_game_choice()
-
-            # Runs show_progress_score if user types in "progress" or "score"
-            # which displays the scoreboard
-            if (engineering_bay_path_options == "progress" or
-                    engineering_bay_path_options == "score"):
-                show_progress_score()
-
             # Handles player's choice to stay in the Engineering Bay
             if (engineering_bay_path_options == "a" or
                     engineering_bay_path_options == "stay"):
@@ -1102,18 +1113,6 @@ def engineering_bay():
                                               "space suit on?\n[y]yes \n[n]no"
                                               "\n> ").lower()
 
-                    # Runs restart_game_choice if user types in "end" which
-                    # offers them to start from the beginning or to end the
-                    # program
-                    if space_suit_choice == "end":
-                        restart_game_choice()
-
-                    # Runs show_progress_score if user types in "progress" or
-                    # "score" which displays the scoreboard
-                    if (space_suit_choice == "progress" or
-                            space_suit_choice == "score"):
-                        show_progress_score()
-
                     # Handles player's choice if they choose yes
                     if space_suit_choice == "y" or space_suit_choice == "yes":
                         # Clears the terminal
@@ -1161,18 +1160,45 @@ def engineering_bay():
                         # Runs the airlock scenario
                         airlock()
 
+                    # Runs show_progress_score if user types in "progress"
+                    # or "score" which displays the scoreboard
+                    elif (space_suit_choice == "progress" or
+                          space_suit_choice == "score"):
+                        show_progress_score()
+
+                    # Runs restart_game_choice if user types in "end" which
+                    # offers them to start from the beginning or to
+                    # end the program
+                    elif space_suit_choice == "end":
+                        restart_game_choice()
+
                     # Handles incorrect input and continues with the loop
                     else:
                         print("Invalid input, your choices are [y]yes or "
                               "[n]no")
                         print('You can end the game by typing "end"')
+                        print('You can check the scoreboard by typing '
+                              '"progress" or "score"')
                         print(f'\nYou typed in "{space_suit_choice}"\n')
 
-        # Handles incorrect input and continues with the loop
-        else:
-            print("Invalid input, your choices are [y]yes or [n]no")
-            print('You can end the game by typing "end"')
-            print(f'\nYou typed in "{engineering_bay_path_options}"\n')
+            # Runs show_progress_score if user types in "progress" or "score"
+            # which displays the scoreboard
+            elif (engineering_bay_path_options == "progress" or
+                  engineering_bay_path_options == "score"):
+                show_progress_score()
+
+            # Runs restart_game_choice if user types in "end" which offers
+            # them to start from the beginning or to end the program
+            elif engineering_bay_path_options == "end":
+                restart_game_choice()
+
+            # Handles incorrect input and continues with the loop
+            else:
+                print("Invalid input, your choices are [y]yes or [n]no")
+                print('You can end the game by typing "end"')
+                print('You can check the scoreboard by typing "progress"'
+                      ' or "score"')
+                print(f'\nYou typed in "{engineering_bay_path_options}"\n')
 
     # Handles output if shadow_figure is True
     if shadow_figure is True:
@@ -1201,17 +1227,6 @@ def engineering_bay():
         explore_engineering_bay = input("\nWould you like to explore the "
                                         "Engineering bay?\n[y]yes\n[n]no.\n> ")
 
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if explore_engineering_bay == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (explore_engineering_bay == "progress" or
-                explore_engineering_bay == "score"):
-            show_progress_score()
-
         # Handles player's choice if they choose yes
         if explore_engineering_bay == "y" or explore_engineering_bay == "yes":
             print("\nYou start exploring and walking around. You are as exited"
@@ -1230,17 +1245,6 @@ def engineering_bay():
                                        "of the room.\n"
                                        "[d] Decide to stop exploring and "
                                        "continue on your way.\n\n> ")
-
-                # Runs restart_game_choice if user types in "end" which offers
-                # them to start from the beginning or to end the program
-                if explore_choice == "end":
-                    restart_game_choice()
-
-                # Runs show_progress_score if user types in "progress" or
-                # "score" which displays the scoreboard
-                if (explore_engineering_bay == "progress" or
-                        explore_engineering_bay == "score"):
-                    show_progress_score()
 
                 # Handles player's choice to explore crafting
                 if explore_choice == "a" or explore_choice == "crafting":
@@ -1363,11 +1367,24 @@ def engineering_bay():
                     # Runs engineering_bay_path_choice scenario
                     engineering_bay_path_choice()
 
+                # Runs show_progress_score if user types in "progress" or
+                # "score" which displays the scoreboard
+                elif explore_choice == "progress" or explore_choice == "score":
+                    show_progress_score()
+
+                # Runs restart_game_choice if user types in "end" which
+                # offers them to start from the beginning or to end
+                # the program
+                elif explore_choice == "end":
+                    restart_game_choice()
+
                 # Handles incorrect input and continues with the loop
                 else:
                     print("Invalid input, your choices are [a]crafting, "
                           "[b]constructors, [c]computer, [d]stop or continue")
                     print('You can end the game by typing "end"')
+                    print('You can check the scoreboard by typing "progress"'
+                          ' or "score"')
                     print(f'\nYou typed in "{explore_choice}"\n')
 
         # Handles player's choice if they choose no
@@ -1385,10 +1402,22 @@ def engineering_bay():
             # Runs engineering_bay_path_choice scenario
             engineering_bay_path_choice()
 
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif fall_decision == "progress" or fall_decision == "score":
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif fall_decision == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Invalid input, your choices are [y]yes or [n]no")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{explore_engineering_bay}"\n')
 
 
@@ -1478,17 +1507,6 @@ def escape_pods():
                                   "escape \n[b] turn around and go back to"
                                   " try and save everyone?\n> ")
 
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if escape_pod_option == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (escape_pod_option == "progress" or
-                escape_pod_option == "score"):
-            show_progress_score()
-
         # Handles player's choice to escape and save themselves
         if escape_pod_option == "a" or escape_pod_option == "escape":
             clear()
@@ -1567,10 +1585,23 @@ def escape_pods():
                   "into the Cargo Hold")
             escape_pods_lift_ending()
 
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (escape_pod_option == "progress" or
+              escape_pod_option == "score"):
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif escape_pod_option == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Invalid input, your choices are [a]escape or [b]go back")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{escape_pod_option}"\n')
 
 
@@ -1605,17 +1636,6 @@ def cargo_hold_path_choice():
                                         "unmarked lift that takes you down a "
                                         "level\n[b] right into the Engineering"
                                         " Bay\n> ").lower()
-
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if cargo_hold_path_options == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (cargo_hold_path_options == "progress" or
-                cargo_hold_path_options == "score"):
-            show_progress_score()
 
         # Handles users choice to follow left inside a suspiciously old lift
         # This helps set up the death scenario if they decide to come back from
@@ -1654,10 +1674,24 @@ def cargo_hold_path_choice():
                   "can't seem to catch up.")
             # Runs the Engineering Bay scenario
             engineering_bay()
+
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (cargo_hold_path_options == "progress" or
+              cargo_hold_path_options == "score"):
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif cargo_hold_path_options == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Invalid input, your choices are [a]left or [b]right")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{cargo_hold_path_options}"\n')
 
 
@@ -1687,17 +1721,6 @@ def cargo_hold():
                                    "[c] specimens\n"
                                    "[d] continue on/ don't explore"
                                    "\n> ").lower()
-
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if cargo_hold_options == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (cargo_hold_options == "progress" or
-                cargo_hold_options == "score"):
-            show_progress_score()
 
         # Handles choice to examine the various boxes.
         if cargo_hold_options == "a" or cargo_hold_options == "boxes":
@@ -1766,11 +1789,24 @@ def cargo_hold():
             # Starts the cargo_hold_path_choice scenario
             cargo_hold_path_choice()
 
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (cargo_hold_options == "progress" or
+              cargo_hold_options == "score"):
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif cargo_hold_options == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Invalid input, your choices are [a]boxes, [b]vehicles, "
                   "[c]specimens or [d]continue")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{cargo_hold_options}"\n')
 
 
@@ -1789,17 +1825,6 @@ def control_room_choose_path():
                                     "into the Cargo Hold \n[b]Go right "
                                     "into the Engineering Bay"
                                     "\n> ").lower()
-
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if control_path_choice == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (control_path_choice == "progress" or
-                control_path_choice == "score"):
-            show_progress_score()
 
         # Handles player's choice to proceed left
         if control_path_choice == "a" or control_path_choice == "left":
@@ -1833,10 +1858,23 @@ def control_room_choose_path():
             # Runs engineering_bay scenario
             engineering_bay()
 
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (control_path_choice == "progress" or
+              control_path_choice == "score"):
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif control_path_choice == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Invalid input, you can go either [a]left or [b]right")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{control_path_choice}"\n')
 
 
@@ -1862,17 +1900,6 @@ def control_room():
         control_room_options = input("Do you \n[a]explore the screens "
                                      "\n[b]continue on"
                                      "\n> ").lower()
-
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if control_room_options == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (control_room_options == "progress" or
-                control_room_options == "score"):
-            show_progress_score()
 
         # Handles player choice to explore the screens where they find out
         # about the navigational fault that starts the threat countdown
@@ -1908,10 +1935,23 @@ def control_room():
             # Breaks out of the loop to continue to control_room_choose_path
             break
 
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (control_room_options == "progress" or
+              control_room_options == "score"):
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif control_room_options == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Incorrect input, please choose [a]explore or [b]continue")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{control_room_options}"\n')
 
     # Runs the control_room_choose_path scenario
@@ -1931,9 +1971,10 @@ def healing_procedure():
     print("Cellular Rejuvenation...\n")
     print("Healing complete\n".upper())
     print("Specimen returned to optimum health.\n")
-    # Set bleeding back to False
+    # Set bleeding to False and changes state in HealthState class
     # Stops damage active effects
-    player_health.bleeding = False
+    bleeding = False
+    player_health.set_bleeding_state(bleeding)
 
 
 def forceful_healing_procedure():
@@ -2001,17 +2042,6 @@ def med_bay_choose_path():
         med_bay_path_choice = input("What would you like to explore? "
                                     "\n[a]left \n[b]right \n> ").lower()
 
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if med_bay_path_choice == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (med_bay_path_choice == "progress" or
-                med_bay_path_choice == "score"):
-            show_progress_score()
-
         # Handles player's choice to go left
         if med_bay_path_choice == "a" or med_bay_path_choice == "left":
             # Clears the terminal
@@ -2052,17 +2082,6 @@ def med_bay_choose_path():
                                             " Bay  \n[b]go back into the Med "
                                             "Bay?\n> ")
 
-            # Runs restart_game_choice if user types in "end" which offers
-            # them to start from the beginning or to end the program
-            if observation_deck_option == "end":
-                restart_game_choice()
-
-            # Runs show_progress_score if user types in "progress" or "score"
-            # which displays the scoreboard
-            if (observation_deck_option == "progress" or
-                    observation_deck_option == "score"):
-                show_progress_score()
-
             # Handles player's choice to proceed to Engineering Bay
             if (observation_deck_option == "a" or
                     observation_deck_option == "Engineering Bay"):
@@ -2082,6 +2101,25 @@ def med_bay_choose_path():
                 print("\nYou turn around to explore the Medical Bay further.")
                 # Runs med_bay_choose_path path
                 med_bay_choose_path()
+
+            # Runs show_progress_score if user types in "progress" or "score"
+            # which displays the scoreboard
+            elif (observation_deck_option == "progress" or
+                  observation_deck_option == "score"):
+                show_progress_score()
+
+            # Runs restart_game_choice if user types in "end" which offers
+            # them to start from the beginning or to end the program
+            elif observation_deck_option == "end":
+                restart_game_choice()
+
+            # Handles incorrect input and continues with the loop
+            else:
+                print("\n Invalid input. Please choose [a]left or [b]right")
+                print('You can end the game by typing "end"')
+                print('You can check the scoreboard by typing "progress"'
+                      ' or "score"')
+                print(f'\nYou typed in "{observation_deck_option}"\n')
 
         # Handles player's choice to go right
         elif med_bay_path_choice == "b" or med_bay_path_choice == "right":
@@ -2118,10 +2156,23 @@ def med_bay_choose_path():
                   "after them, but they disappeare.")
             print("You find yourself at the same cross section.")
 
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (med_bay_path_choice == "progress" or
+              med_bay_path_choice == "score"):
+            show_progress_score()
+
+        # Runs restart_game_choice if user types in "end" which offers
+        # them to start from the beginning or to end the program
+        elif med_bay_path_choice == "end":
+            restart_game_choice()
+
         # Handles incorrect input and continues with the loop
         else:
             print("\n Invalid input. Please choose [a]left or [b]right")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{med_bay_path_choice}"\n')
 
 
@@ -2152,16 +2203,6 @@ def med_bay():
         healing_chamber = input("Would you like to test your health? "
                                 "\n[y]yes \n[n]no \n> ").lower()
 
-        # Runs restart_game_choice if user types in "end" which offers them
-        # to start from the beginning or to end the program
-        if healing_chamber == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score"
-        # which displays the scoreboard
-        if (healing_chamber == "progress" or healing_chamber == "score"):
-            show_progress_score()
-
         # Handles player's choice to test their healt
         if healing_chamber == "y" or healing_chamber == "yes":
 
@@ -2174,18 +2215,6 @@ def med_bay():
                 print("Wound detected on the left forearm.")
                 heal_wound = input("\nWould you like to heal the wound? "
                                    "\n[y]yes \n[n]no \n> ").lower()
-
-                # Runs restart_game_choice if user types in "end" which
-                # offers them to start from the beginning or to end the
-                # program
-                if heal_wound == "end":
-                    restart_game_choice()
-
-                # Runs show_progress_score if user types in "progress"
-                # or "score" which displays the scoreboard
-                if (heal_wound == "progress" or
-                        heal_wound == "score"):
-                    show_progress_score()
 
                 # Handles choice to heal the wound
                 if heal_wound == "y" or heal_wound == "yes":
@@ -2201,6 +2230,27 @@ def med_bay():
                     # Runs the forceful healing procedure
                     forceful_healing_procedure()
 
+                # Runs restart_game_choice if user types in "end" which
+                # offers them to start from the beginning or to end the
+                # program
+                elif heal_wound == "end":
+                    restart_game_choice()
+
+                # Runs show_progress_score if user types in "progress"
+                # or "score" which displays the scoreboard
+                elif (heal_wound == "progress" or
+                        heal_wound == "score"):
+                    show_progress_score()
+
+                # Handles incorrect input and continues with to loop
+                else:
+                    print("\nInvalid input. Please choose either yes/y"
+                          " or no/n")
+                    print('You can end the game by typing "end"')
+                    print('You can check the scoreboard by typing "progress"'
+                          ' or "score"')
+                    print(f'\nYou typed in "{healing_chamber}"\n')
+
             # Handles the outcome if bleeding is False
             else:
                 print("No anomalies detected.")
@@ -2214,10 +2264,22 @@ def med_bay():
             # Runs with the med_bay_choose_path scenario
             med_bay_choose_path()
 
+        # Runs restart_game_choice if user types in "end" which offers them
+        # to start from the beginning or to end the program
+        elif healing_chamber == "end":
+            restart_game_choice()
+
+        # Runs show_progress_score if user types in "progress" or "score"
+        # which displays the scoreboard
+        elif (healing_chamber == "progress" or healing_chamber == "score"):
+            show_progress_score()
+
         # Handles incorrect input and continues with to loop
         else:
             print("\nInvalid input. Please choose either yes/y or no/n")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{healing_chamber}"\n')
 
 
@@ -2237,16 +2299,6 @@ def choose_path(fall_decision):
     while True:
         path_choice = input("Which path would you like to "
                             "take? \n[a]straight \n[b]right \n> ").lower()
-
-        # Runs restart_game_choice if user types in "end" which offers them to
-        # start from the beginning or to end the program
-        if path_choice == "end":
-            restart_game_choice()
-
-        # Runs show_progress_score if user types in "progress" or "score" which
-        # displays the scoreboard
-        if (path_choice == "progress" or path_choice == "score"):
-            show_progress_score()
 
         # Checks if user chose path 'a'
         # Runs through the scenario where player proceeds straight
@@ -2268,10 +2320,22 @@ def choose_path(fall_decision):
             # Runs the Med Bay scenario
             med_bay()
 
+        # Runs restart_game_choice if user types in "end" which offers them to
+        # start from the beginning or to end the program
+        elif path_choice == "end":
+            restart_game_choice()
+
+        # Runs show_progress_score if user types in "progress" or "score" which
+        # displays the scoreboard
+        elif (path_choice == "progress" or path_choice == "score"):
+            show_progress_score()
+
         # Handles incorrect input and continues with the loop
         else:
             print("Invalid input. Please choose [a]straight or [b]right")
             print('You can end the game by typing "end"')
+            print('You can check the scoreboard by typing "progress"'
+                  ' or "score"')
             print(f'\nYou typed in "{path_choice}"\n')
 
 
