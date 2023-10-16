@@ -120,7 +120,9 @@ def progress_tracker():
     for row in victims_data[-5:]:
         username = row[0]  # Sets first row as username/header
         user_progress = []
-
+    # used help from stackoverflow for enumerate code
+    # https://stackoverflow.com/questions/72047933/accessing-a-value-by-index-
+    # in-enumerate-for-loop
         # runs through ending_reasons and check for "X"
         for i, reason in enumerate(ending_reasons):
             if row[i + 1] == "X":

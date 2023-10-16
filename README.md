@@ -9,7 +9,9 @@
 
 ## Wireframes - [Lucid](https://lucid.app/)
 ![Lucid basic game progress mind map](assets/images/lucid_mind_map.avif)
-### Mind map
+
+
+## How to Play
 - The mind map is just a basic starting plan that was used to plan out the progress of the game
 
 #### Game start
@@ -221,6 +223,7 @@
 - Corrected the bleeding effect, by using a proper method of assignment, added a set_bleeding_state function to control whether the statement is True or False
 - Added another message to error handler to print a message on how to access scoreboard.
 - Discovered error where a restart choice offered the way to break the game by typing in anything but provided choices that would let the game continue, because there was no while loop on the restart_game_choice function. Fixed the error by creating the while loop
+- I tried to set up my own css and html file to display a picture of my choosing and increse the size of terminal, but I was unsure of which changes I was supposed to do on Heroku app, so I decided to remove the changes and return it to secure working project I already created
 
 ### Unfixed bugs:
 
@@ -229,6 +232,9 @@
 ## Validator testing
 
 - I ran an internal testing using pycodestyle and no errors were returned or found.
+- Passed the code through a PEP8 linter and confirmed there are no errors or problems
+- Inputs were tested thoroughly, wrong inputs were put in, numbers, whitespaces, same inputs
+- Tested in local terminal and the Code Institute Heroku terminal
 
 ## Deployment
 
