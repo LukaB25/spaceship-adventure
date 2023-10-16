@@ -7,7 +7,7 @@
 - The SpaceShip Adventure offers it's users a fun and interactive adventure that plays out the outcomes depending on their choices.
 - There are multiple ways to survive, but also to die. The game will keep track of all of the users and the progress they made by storing the data inside of google sheets.
 
-## Wireframes
+## Wireframes - [Lucid](https://lucid.app/)
 
 ## About the build:
 
