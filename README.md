@@ -168,7 +168,36 @@
 
 ## Deployment
 
+### Create a list of requirements
+- in terminal write command: pip3 freeze > requirements.txt
+- requirements.txt is updated. 
+- commit changes and push to github
 
+### Login or Create account with Heroku
+- Signup - fill out the form, as a role select student
+- Confirm your email
+- Login - enter login details
+
+### Create new app
+- select create new app button
+- select the name, name has to be unique
+- select region, Europe for me
+
+#### Settings
+- go to Config Vars: as key type in "CREDS"; for value copy the contents from creds.json file. Click Add button
+- for second Config Var: the key will be "PORT" and the value needs to be "8000". Click Add button again
+- go to buildpacks section, select Add buildpack button, select python, then repeat process and select NodeJS. First one needs to be Python and NodeJS second
+
+#### Deploy
+- go down to Deployment method section, select GitHub as a method
+- copy the name of your repository, click on search button
+- click on connect button to link up the repository
+- scroll down to automatic deploys, select it to enable automatic deployment of any changes made to GitHub repository
+- in Manual deploy section, click on Deploy Branch button.
+- the app will run the logs while creating
+- when the app is created the app was successfully deployed message and the  view button will appear
+- the app is built, open the app and test it to make sure there are no errors.
+- if connected correctly the data should be updated in the google spreadsheets.
 
 ## Credits
 
